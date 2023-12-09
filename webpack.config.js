@@ -8,14 +8,14 @@ module.exports = (env, argv) => {
 
     return ({
         mode,
-        entry: './src/index.tsx',
+        entry: './src/index.ts',
         output: {
             publicPath: '/',
             path: path.resolve(__dirname, 'dist'),
             filename: 'bundle.js'
         },
         resolve: {
-            extensions: ['.ts', '.tsx', '.js', '.jsx'],
+            extensions: ['.ts', '.js'],
             modules: [
                 path.resolve(__dirname, './node_modules'),
                 path.resolve(__dirname, './src')
@@ -24,7 +24,7 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.(ts|tsx|js|jsx)$/,
+                    test: /\.(ts|js)$/,
                     exclude: /node_modules/,
                     loader: 'babel-loader'
                 },
