@@ -1,9 +1,9 @@
 import '@pixi/graphics-extras';
-import { Application, Container, Graphics, PI_2, Sprite, Text } from 'pixi.js';
+import { Application, Container, Graphics } from 'pixi.js';
 import './assets';
 import { createAssetsLibrary } from './assets';
 import { createIsometricPlane } from './isometric-plane';
-import { calculateHexPoints, rotatePoint } from './geometry';
+import { calculateHexPoints } from './geometry';
 
 const HEIGHT = 768;
 const WIDTH = 1024;
@@ -46,8 +46,8 @@ const startApp = async () => {
     );
 
     const isoPlane = createIsometricPlane(
-        2 * Math.PI / 6,
-        Math.PI / 6
+        2 * degInRad30,
+        degInRad30
     );
 
     const isoPoints = hexPoints.map(isoPlane.isoToCar);
