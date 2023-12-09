@@ -1,0 +1,13 @@
+{
+  "bundles":[
+    {
+      "name":"board-screen",
+      "assets":[
+        {
+          "name":"plane",
+          "srcs":"assets/plane.png"
+        }
+      ]
+    }
+  ]
+}
