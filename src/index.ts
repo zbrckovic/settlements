@@ -20,10 +20,10 @@ const startApp = async () => {
 
     const ortContainer = new Container();
     app.stage.addChild(ortContainer);
-    ortContainer.position.set(10, -10);
+    ortContainer.position.set(200, -200);
 
     const isoContainer = new Container();
-    isoContainer.position.set(WIDTH / 2 + 10, -10);
+    isoContainer.position.set(WIDTH / 2 + 200, -200);
     app.stage.addChild(isoContainer);
 
     ortContainer.addChild(renderBoard(p => p.mapY(invertY)));
