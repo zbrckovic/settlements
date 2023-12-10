@@ -3,7 +3,8 @@ import { Application, Container } from 'pixi.js';
 import './assets';
 import { createAssetsLibrary } from './assets';
 import { createIsometricProjection, createYInverter } from './geometry';
-import { renderBoard } from './render-board';
+import { createBoardRenderer } from './board-renderer';
+import { Board, Tile } from './game/board';
 
 const HEIGHT = 768;
 const WIDTH = 1024;
@@ -18,19 +19,35 @@ const startApp = async () => {
     globalThis.__PIXI_APP__ = app;
     document.body.appendChild(app.view as any);
 
-    const ortContainer = new Container();
-    app.stage.addChild(ortContainer);
-    ortContainer.position.set(200, -200);
+    const leftContainer = new Container();
+    app.stage.addChild(leftContainer);
+    leftContainer.position.set(100, 100);
 
-    const isoContainer = new Container();
-    isoContainer.position.set(WIDTH / 2 + 200, -200);
-    app.stage.addChild(isoContainer);
+    const rightContainer = new Container();
+    rightContainer.position.set(WIDTH / 2 + 100, 100);
+    app.stage.addChild(rightContainer);
 
-    ortContainer.addChild(renderBoard(p => p.mapY(invertY)));
+    const boardRenderer = createBoardRenderer();
+    const isoBoardRenderer = createBoardRenderer(createIsometricProjection(Math.PI / 6, Math.PI / 3));
 
-    isoContainer.addChild(
-        renderBoard(p => p.map(createIsometricProjection(Math.PI / 6, Math.PI / 3)).mapY(invertY))
-    );
+    const board: Board = {
+        tiles: [
+            [Tile.Water, Tile.Water, Tile.Water, Tile.Water],
+            [Tile.Water, Tile.Mountains, Tile.Mountains, Tile.Mountains, Tile.Water],
+            [Tile.Water, Tile.Plains, Tile.Mountains, Tile.Forest, Tile.Mountains, Tile.Water],
+            [
+                Tile.Water,
+                Tile.Mountains, Tile.Mountains, Tile.Desert, Tile.Mountains, Tile.Mountains,
+                Tile.Water
+            ],
+            [undefined, Tile.Water, Tile.Hills, Tile.Mountains, Tile.Mountains, Tile.Mountains, Tile.Water],
+            [undefined, undefined,  Tile.Water, Tile.Mountains, Tile.Mountains, Tile.Mountains, Tile.Water],
+            [undefined, undefined,  undefined, Tile.Water, Tile.Water, Tile.Water, Tile.Water],
+        ]
+    };
+
+    leftContainer.addChild(boardRenderer.renderBoard(board));
+    rightContainer.addChild(isoBoardRenderer.renderBoard(board));
 };
 
 startApp()

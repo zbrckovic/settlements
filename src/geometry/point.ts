@@ -2,6 +2,8 @@ export interface Point {
     readonly x: number;
     readonly y: number;
 
+    readonly add: (other: Point) => Point;
+    readonly multiply: (factor: number) => Point;
     readonly mapY: (mapper: (y: number) => number) => Point;
     readonly mapX: (mapper: (x: number) => number) => Point;
     readonly map: (projection: (point: Point) => Point) => Point;
@@ -15,6 +17,8 @@ export interface Point {
 export const createPoint = (x: number, y: number): Point => {
     const withX = (x: number) => createPoint(x, y);
     const withY = (y: number) => createPoint(x, y);
+
+    const add = (other: Point) => createPoint(x + other.x, y + other.y);
 
     const distanceTo = (other: Point) => {
         const hDistance = other.x - x;
@@ -35,9 +39,11 @@ export const createPoint = (x: number, y: number): Point => {
         return createPoint(newX, newY);
     }
 
+    const multiply = (factor: number) => createPoint(x * factor, y * factor);
+
     const map = (mapper: (point: Point) => Point) => mapper(createPoint(x, y));
     const mapX = (mapper: (x: number) => number) => withX(mapper(x));
     const mapY = (mapper: (y: number) => number) => withY(mapper(y));
 
-    return { x, y, withX, withY, distanceTo, rotate, map, mapX, mapY };
+    return { x, y, withX, withY, distanceTo, rotate, map, mapX, mapY, add, multiply };
 };
