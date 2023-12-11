@@ -1,15 +1,17 @@
-import { Container, Graphics, Text } from 'pixi.js';
+import { Container, Graphics, PI_2, Sprite, Text } from 'pixi.js';
 import { Projection } from './geometry/projection';
 import { calculateRegularPolygonPoints, createPoint } from './geometry';
 import { addPointsToGraphics } from './pixi-utils';
 import { Board, Tile } from './game/board';
+import { AssetsLibrary, BoardScreenBundle } from './assets';
 
 export interface BoardRenderer {
     renderBoard: (board: Board) => Container;
 }
 
-export const createBoardRenderer = (projection: Projection = p => p): BoardRenderer => {
-    const tileSide = 20;
+export const createBoardRenderer = (bla = false, assets: BoardScreenBundle, projection: Projection = p => p): BoardRenderer => {
+    const tileSide = 40;
+    const hexRotation = Math.PI / 6;
 
     const renderBoard = (board: Board): Container => {
         const container = new Container();
@@ -35,6 +37,8 @@ export const createBoardRenderer = (projection: Projection = p => p): BoardRende
                 const horizontalOffset = tileHorizontalOffset.multiply(colIndex);
 
                 const p = rowPosition.add(verticalOffset).add(horizontalOffset);
+
+                if (tile === undefined) return;
 
                 const tileContainer = renderTile(tile);
                 tileContainer.position.set(p.x, p.y);
@@ -79,6 +83,22 @@ export const createBoardRenderer = (projection: Projection = p => p): BoardRende
                 hexPoints.map(projection)
             )
         );
+
+        if (tile === Tile.Desert) {
+            const c = new Container();
+
+            const sprite = new Sprite(assets.hex)
+            sprite.scale.set(0.1, 0.1);
+            sprite.anchor.set(0.5, 0.5);
+            c.addChild(sprite);
+            container.addChild(c);
+
+            if (bla) {
+                sprite.skew.set(0, Math.PI / 6);
+                c.skew.set(0, 0);
+                c.rotation = -Math.PI / 3;
+            }
+        }
 
         return container;
     };

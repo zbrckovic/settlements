@@ -10,10 +10,11 @@ export const createAssetsLibrary = async (): Promise<AssetsLibrary> => {
     return { loadBoardScreenBundle };
 };
 
-interface AssetsLibrary {
+export interface AssetsLibrary {
     loadBoardScreenBundle: () => Promise<BoardScreenBundle>;
 }
 
-interface BoardScreenBundle {
+export interface BoardScreenBundle {
     plane: Texture;
+    hex: Texture;
 }

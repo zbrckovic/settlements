@@ -6,6 +6,10 @@
         {
           "name":"plane",
           "srcs":"assets/plane.png"
+        },
+        {
+          "name":"hex",
+          "srcs":"assets/hex.png"
         }
       ]
     }

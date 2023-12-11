@@ -9,8 +9,6 @@ import { Board, Tile } from './game/board';
 const HEIGHT = 768;
 const WIDTH = 1024;
 
-const invertY = createYInverter(HEIGHT);
-
 const startApp = async () => {
     const assetsLibrary = await createAssetsLibrary();
     const boardScreenBundle = await assetsLibrary.loadBoardScreenBundle();
@@ -27,8 +25,8 @@ const startApp = async () => {
     rightContainer.position.set(WIDTH / 2 + 100, 100);
     app.stage.addChild(rightContainer);
 
-    const boardRenderer = createBoardRenderer();
-    const isoBoardRenderer = createBoardRenderer(createIsometricProjection(Math.PI / 6, Math.PI / 3));
+    const boardRenderer = createBoardRenderer(false, boardScreenBundle);
+    const isoBoardRenderer = createBoardRenderer(true, boardScreenBundle, createIsometricProjection(Math.PI / 6, Math.PI / 3));
 
     const board: Board = {
         tiles: [
