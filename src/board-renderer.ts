@@ -117,13 +117,12 @@ export const createBoardRenderer = (bla = false, plane: Plane, assets: BoardScre
             spriteContainer.addChild(sprite);
 
 
-
-
-
             container.addChild(spriteContainer);
 
             if (bla) {
-                // sprite.skew.set(Math.PI / 6);
+                sprite.skew.set(0, Math.PI / 6);
+                // spriteContainer.skew.set(0, 0);
+                spriteContainer.rotation = Math.PI / 3;
             }
         }
 

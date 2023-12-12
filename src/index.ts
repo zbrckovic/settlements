@@ -25,7 +25,11 @@ const startApp = async () => {
     rightContainer.position.set(WIDTH / 2 + 300, 100);
     app.stage.addChild(rightContainer);
 
-    const boardRenderer = createBoardRenderer(false, createPlane(), boardScreenBundle);
+    const boardRenderer = createBoardRenderer(
+        false,
+        createPlane(Math.PI / 2, Math.PI / 6),
+        boardScreenBundle
+    );
     const isoBoardRenderer = createBoardRenderer(
         true,
         createPlane(
