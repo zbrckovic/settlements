@@ -108,18 +108,22 @@ export const createBoardRenderer = (bla = false, plane: Plane, assets: BoardScre
         );
 
         if (tile === Tile.Desert) {
-            const c = new Container();
+            const spriteContainer = new Container();
 
             const sprite = new Sprite(assets.hex);
+            sprite.rotation = hexRotation + plane.tiltAngle;
             sprite.scale.set(0.1, 0.1);
             sprite.anchor.set(0.5, 0.5);
-            c.addChild(sprite);
-            container.addChild(c);
+            spriteContainer.addChild(sprite);
+
+
+
+
+
+            container.addChild(spriteContainer);
 
             if (bla) {
-                sprite.skew.set(0, Math.PI / 6);
-                c.skew.set(0, 0);
-                c.rotation = -Math.PI / 3;
+                // sprite.skew.set(Math.PI / 6);
             }
         }
 
