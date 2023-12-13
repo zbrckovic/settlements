@@ -108,13 +108,13 @@ export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): Bo
         sprite.scale.set(0.15, 0.15);
         sprite.anchor.set(0.5, 0.5);
 
-        const c = new Container();
+        const spriteContainer = new Container();
 
-        c.addChild(sprite);
-        c.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0);
-        c.rotation = plane.tiltAngle;
+        spriteContainer.addChild(sprite);
+        spriteContainer.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0);
+        spriteContainer.rotation = plane.tiltAngle;
 
-        container.addChild(c);
+        container.addChild(spriteContainer);
 
         return container;
     };
