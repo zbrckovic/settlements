@@ -17,4 +17,5 @@ export interface AssetsLibrary {
 export interface BoardScreenBundle {
     plane: Texture;
     hex: Texture;
+    colors: Texture;
 }

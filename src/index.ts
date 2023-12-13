@@ -27,15 +27,12 @@ const startApp = async () => {
 
     const boardRenderer = createBoardRenderer(
         false,
-        createPlane(Math.PI / 2, Math.PI / 6),
+        createPlane(Math.PI / 2),
         boardScreenBundle
     );
     const isoBoardRenderer = createBoardRenderer(
         true,
-        createPlane(
-            Math.PI - Math.PI / 3,
-            // Math.PI / 6
-        ),
+        createPlane(Math.PI - Math.PI / 3,),
         boardScreenBundle
     );
 

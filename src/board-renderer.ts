@@ -69,6 +69,22 @@ export const createBoardRenderer = (bla = false, plane: Plane, assets: BoardScre
 
         container.addChild(createAxes());
 
+
+        const sprite = new Sprite(assets.colors);
+        sprite.scale.set(0.3, 0.3);
+        sprite.anchor.set(0.5, 0.5);
+        sprite.rotation = Math.PI / 2;
+        const position = createPoint(0, 0).map(plane.project);
+
+        sprite.position.set(position.x, position.y);
+
+        const c = new Container();
+        c.addChild(sprite);
+        c.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0);
+
+        container.addChild(c);
+
+
         return container;
     };
 
@@ -108,21 +124,20 @@ export const createBoardRenderer = (bla = false, plane: Plane, assets: BoardScre
         );
 
         if (tile === Tile.Desert) {
-            const spriteContainer = new Container();
-
             const sprite = new Sprite(assets.hex);
             sprite.rotation = hexRotation + plane.tiltAngle;
             sprite.scale.set(0.1, 0.1);
             sprite.anchor.set(0.5, 0.5);
-            spriteContainer.addChild(sprite);
 
+            const c = new Container();
 
-            container.addChild(spriteContainer);
+            c.addChild(sprite);
 
             if (bla) {
-                sprite.skew.set(0, Math.PI / 6);
-                spriteContainer.rotation = Math.PI / 3;
+                c.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0);
             }
+
+            container.addChild(c);
         }
 
         return container;

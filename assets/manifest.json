@@ -10,6 +10,10 @@
         {
           "name":"hex",
           "srcs":"assets/hex.png"
+        },
+        {
+          "name":"colors",
+          "srcs":"assets/colors.jpg"
         }
       ]
     }
