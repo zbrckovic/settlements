@@ -4,15 +4,18 @@ import { addPointsToGraphics } from './pixi-utils';
 import { Board, Tile } from './game/board';
 import { BoardScreenBundle } from './assets';
 import { Plane } from './geometry/plane';
+import { tileRoofHeight, tileSide, tileWidth } from './rendering-const';
 
 export interface BoardRenderer {
     renderBoard: (board: Board) => Container;
 }
 
 export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): BoardRenderer => {
-    const tileSide = 60;
     const hexRotation = Math.PI / 6;
 
+    /**
+     * For debugging
+     */
     const createAxes = (): Container => {
         const container = new Container();
         const thickness = 2;
@@ -35,42 +38,34 @@ export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): Bo
     };
 
     const renderBoard = (board: Board): Container => {
-        const container = new Container();
+        const boardContainer = new Container();
 
-        const tileWidth = 2 * Math.sqrt(Math.pow(tileSide, 2) - Math.pow(tileSide / 2, 2));
-        const tileRoofHeight = Math.sqrt(Math.pow(tileSide, 2) - Math.pow(tileWidth / 2, 2));
+        // How much to move downwards to position the tile in the next row.
+        const tileVerticalOffset = createPoint(-tileWidth / 2, 2 * tileSide - tileRoofHeight)
+            .map(plane.project);
 
-        const tileVerticalOffset = createPoint(
-            -tileWidth / 2,
-            2 * tileSide - tileRoofHeight
-        ).map(plane.project);
+        // How much to move to the right to position the tile in the next column.
+        const tileHorizontalOffset = createPoint(tileWidth, 0).map(plane.project);
 
-        const tileHorizontalOffset = createPoint(
-            tileWidth,
-            0
-        ).map(plane.project);
-
-        let rowPosition = createPoint(0, 0);
+        const topLeftTilePosition = createPoint(0, 0);
         board.tiles.forEach((row, rowIndex) => {
             const verticalOffset = tileVerticalOffset.multiply(rowIndex);
 
             row.forEach((tile, colIndex) => {
-                const horizontalOffset = tileHorizontalOffset.multiply(colIndex);
-
-                const p = rowPosition.add(verticalOffset).add(horizontalOffset);
-
                 if (tile === undefined) return;
 
+                const horizontalOffset = tileHorizontalOffset.multiply(colIndex);
+                const tilePosition = topLeftTilePosition.add(verticalOffset).add(horizontalOffset);
                 const tileContainer = renderTile(tile);
-                tileContainer.position.set(p.x, p.y);
-                container.addChild(tileContainer);
+                tileContainer.position.set(tilePosition.x, tilePosition.y);
+                boardContainer.addChild(tileContainer);
             });
         });
 
-        container.addChild(createAxes());
+        boardContainer.addChild(createAxes());
 
 
-        return container;
+        return boardContainer;
     };
 
     const calculateTileColor = (tile?: Tile): number => {
@@ -108,20 +103,18 @@ export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): Bo
             )
         );
 
-        if (tile === Tile.Desert) {
-            const sprite = new Sprite(assets.hex);
-            sprite.rotation = hexRotation
-            sprite.scale.set(0.1, 0.1);
-            sprite.anchor.set(0.5, 0.5);
+        const sprite = new Sprite(assets.hex);
+        sprite.rotation = hexRotation;
+        sprite.scale.set(0.15, 0.15);
+        sprite.anchor.set(0.5, 0.5);
 
-            const c = new Container();
+        const c = new Container();
 
-            c.addChild(sprite);
-            c.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0);
-            c.rotation = plane.tiltAngle;
+        c.addChild(sprite);
+        c.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0);
+        c.rotation = plane.tiltAngle;
 
-            container.addChild(c);
-        }
+        container.addChild(c);
 
         return container;
     };

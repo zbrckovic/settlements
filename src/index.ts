@@ -1,5 +1,5 @@
 import '@pixi/graphics-extras';
-import { Application, Container } from 'pixi.js';
+import { Application } from 'pixi.js';
 import './assets';
 import { createAssetsLibrary } from './assets';
 import { createBoardRenderer } from './board-renderer';
@@ -38,8 +38,18 @@ const startApp = async () => {
         ]
     };
 
+    // Number of tiles which would be in the negative quadrant if we draw the board from 0, 0.
+    let leftOverflow = 0;
+    board.tiles.forEach((row, rowIndex) => {
+        const firstTileIndex = row.findIndex((tile) => tile !== undefined);
+        const tileLeftOverflow = rowIndex - firstTileIndex
+        if (tileLeftOverflow > leftOverflow) {
+            leftOverflow = tileLeftOverflow;
+        }
+    })
+
     const boardContainer = boardRenderer.renderBoard(board)
-    boardContainer.position.set(400, 100);
+    boardContainer.position.set(WIDTH / 2 + 100, 100);
     app.stage.addChild(boardContainer);
 };
 
