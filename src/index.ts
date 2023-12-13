@@ -17,22 +17,8 @@ const startApp = async () => {
     globalThis.__PIXI_APP__ = app;
     document.body.appendChild(app.view as any);
 
-    const leftContainer = new Container();
-    app.stage.addChild(leftContainer);
-    leftContainer.position.set(100, 100);
-
-    const rightContainer = new Container();
-    rightContainer.position.set(WIDTH / 2 + 300, 100);
-    app.stage.addChild(rightContainer);
-
     const boardRenderer = createBoardRenderer(
-        false,
-        createPlane(Math.PI / 2),
-        boardScreenBundle
-    );
-    const isoBoardRenderer = createBoardRenderer(
-        true,
-        createPlane(Math.PI - Math.PI / 3,),
+        createPlane(Math.PI - Math.PI / 3, Math.PI / 6),
         boardScreenBundle
     );
 
@@ -52,8 +38,9 @@ const startApp = async () => {
         ]
     };
 
-    leftContainer.addChild(boardRenderer.renderBoard(board));
-    rightContainer.addChild(isoBoardRenderer.renderBoard(board));
+    const boardContainer = boardRenderer.renderBoard(board)
+    boardContainer.position.set(400, 100);
+    app.stage.addChild(boardContainer);
 };
 
 startApp()

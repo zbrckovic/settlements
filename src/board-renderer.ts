@@ -9,8 +9,8 @@ export interface BoardRenderer {
     renderBoard: (board: Board) => Container;
 }
 
-export const createBoardRenderer = (bla = false, plane: Plane, assets: BoardScreenBundle): BoardRenderer => {
-    const tileSide = 40;
+export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): BoardRenderer => {
+    const tileSide = 60;
     const hexRotation = Math.PI / 6;
 
     const createAxes = (): Container => {
@@ -70,21 +70,6 @@ export const createBoardRenderer = (bla = false, plane: Plane, assets: BoardScre
         container.addChild(createAxes());
 
 
-        const sprite = new Sprite(assets.colors);
-        sprite.scale.set(0.3, 0.3);
-        sprite.anchor.set(0.5, 0.5);
-        sprite.rotation = Math.PI / 2;
-        const position = createPoint(0, 0).map(plane.project);
-
-        sprite.position.set(position.x, position.y);
-
-        const c = new Container();
-        c.addChild(sprite);
-        c.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0);
-
-        container.addChild(c);
-
-
         return container;
     };
 
@@ -125,17 +110,15 @@ export const createBoardRenderer = (bla = false, plane: Plane, assets: BoardScre
 
         if (tile === Tile.Desert) {
             const sprite = new Sprite(assets.hex);
-            sprite.rotation = hexRotation + plane.tiltAngle;
+            sprite.rotation = hexRotation
             sprite.scale.set(0.1, 0.1);
             sprite.anchor.set(0.5, 0.5);
 
             const c = new Container();
 
             c.addChild(sprite);
-
-            if (bla) {
-                c.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0);
-            }
+            c.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0);
+            c.rotation = plane.tiltAngle;
 
             container.addChild(c);
         }
