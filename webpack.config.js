@@ -9,7 +9,7 @@ module.exports = (env, argv) => {
 
     return ({
         mode,
-        entry: './src/index.ts',
+        entry: './src/index.js',
         output: {
             publicPath: '/',
             path: path.resolve(__dirname, 'dist'),

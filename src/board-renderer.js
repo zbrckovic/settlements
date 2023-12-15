@@ -1,22 +1,16 @@
-import { Container, Graphics, Sprite } from 'pixi.js';
-import { calculateRegularPolygonPoints, createPoint } from './geometry';
-import { addPointsToGraphics } from './pixi-utils';
-import { Board, Tile } from './game/board';
-import { BoardScreenBundle } from './assets';
-import { Plane } from './geometry/plane';
-import { tileRoofHeight, tileSide, tileWidth } from './rendering-const';
+import {Container, Graphics, Sprite} from 'pixi.js';
+import {calculateRegularPolygonPoints, createPoint} from './geometry';
+import {addPointsToGraphics} from './pixi-utils';
+import {Tile} from './game/board-old';
+import {tileRoofHeight, tileSide, tileWidth} from './rendering-const';
 
-export interface BoardRenderer {
-    renderBoard: (board: Board) => Container;
-}
-
-export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): BoardRenderer => {
+export const createBoardRenderer = (plane, assets) => {
     const hexRotation = Math.PI / 6;
 
     /**
      * For debugging
      */
-    const createAxes = (): Container => {
+    const createAxes = () => {
         const container = new Container();
         const thickness = 2;
         const axisLength = 1000;
@@ -37,7 +31,7 @@ export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): Bo
         return container;
     };
 
-    const renderBoard = (board: Board): Container => {
+    const renderBoard = (board) => {
         const boardContainer = new Container();
 
         // How much to move downwards to position the tile in the next row.
@@ -68,7 +62,7 @@ export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): Bo
         return boardContainer;
     };
 
-    const calculateTileColor = (tile?: Tile): number => {
+    const calculateTileColor = (tile) => {
         if (tile === undefined) return 0x000000;
 
         switch (tile) {
@@ -87,7 +81,7 @@ export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): Bo
         }
     };
 
-    const renderTile = (tile?: Tile): Container => {
+    const renderTile = tile => {
         const container = new Container();
 
         const color = calculateTileColor(tile);
@@ -119,7 +113,7 @@ export const createBoardRenderer = (plane: Plane, assets: BoardScreenBundle): Bo
         return container;
     };
 
-    return { renderBoard };
+    return {renderBoard};
 };
 
 

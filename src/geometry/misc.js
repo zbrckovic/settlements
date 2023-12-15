@@ -4,4 +4,4 @@
  *
  * @param height Height of the area we are drawing in (usually the whole canvas).
  */
-export const createYInverter = (height: number) => (y: number) => height - y;
+export const createYInverter = (height) => (y) => height - y;

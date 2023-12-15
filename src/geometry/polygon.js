@@ -1,12 +1,12 @@
-import { createPoint, Point } from './point';
+import { createPoint } from './point';
 
 export const calculateRegularPolygonPoints = (
-    center: Point,
-    radius: number,
-    sides: number,
-    rotation: number = 0
+    center,
+    radius,
+    sides,
+    rotation = 0
 ) => {
-    const points: Point[] = [];
+    const points = [];
     const angle = 2 * Math.PI / sides;
 
     for (let i = 0; i < sides; i++) {
