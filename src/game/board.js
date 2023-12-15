@@ -1,22 +1,32 @@
-export const createBoard = function (props) {
-  const tiles = new Set(props.tiles)
+// noinspection JSSuspiciousNameCombination
 
-  const rowsByY = new Map()
-  tiles.forEach(tile => {
-    const coords = tile.coords()
-    const row = rowsByY.get(coords.y()) || new Map()
-    row.set(coords.x(), tile)
-    rowsByY.set(coords.y(), row)
-  })
+export function createBoard ({ tiles: tilesArray }) {
+  const tiles = new Set(tilesArray)
 
   return {
     tiles () { return tiles },
     rotate () {
       tiles.forEach(tile => {
-        tile.coords().setX(tile.coords().y())
-        tile.coords().setY(-tile.coords().x())
+        const x = tile.coords().x()
+        const y = tile.coords().y()
+        tile.coords().setX(y)
+        tile.coords().setY(y - x)
       })
       normalize()
+    },
+    toString() {
+      const lookupMap = tileLookupMap()
+      const { x, y, width, height } = frame()
+
+      let result = ''
+      for (let row = y; row < y + height; row++) {
+        for (let col = x; col < x + width; col++) {
+          const tile = lookupMap.get(row)?.get(col)
+          result += tile ? tile.abbreviation() : '_'
+        }
+        result += '\n'
+      }
+      return result
     },
     state () {
       const state = new Set()
@@ -69,5 +79,21 @@ export const createBoard = function (props) {
       tile.coords().setX(tile.coords().x() + x)
       tile.coords().setY(tile.coords().y() + y)
     })
+  }
+
+  /**
+   * Creates a map of tiles by their coordinates.
+   */
+  function tileLookupMap () {
+    const map = new Map()
+
+    tiles.forEach(tile => {
+      const coords = tile.coords()
+      const row = map.get(coords.y()) ?? new Map()
+      row.set(coords.x(), tile)
+      map.set(coords.y(), row)
+    })
+
+    return map
   }
 }

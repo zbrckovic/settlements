@@ -7,9 +7,7 @@ export const TileType = {
   Desert: 'Desert'
 }
 
-export const createTile = props => {
-  let { type, coords } = props
-
+export function createTile ({ type, coords }) {
   return {
     type () { return type },
     coords () { return coords },
