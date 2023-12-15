@@ -13,7 +13,7 @@ const startApp = async () => {
     const assetsLibrary = await createAssetsLibrary();
     const boardScreenBundle = await assetsLibrary.loadBoardScreenBundle();
 
-    const app = new Application({ width: WIDTH, height: HEIGHT });
+    const app = new Application({ width: WIDTH, height: HEIGHT, antialias: true });
     globalThis.__PIXI_APP__ = app;
     document.body.appendChild(app.view as any);
 
