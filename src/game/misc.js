@@ -1,15 +1,18 @@
 /**
  * Used to identify the position of a tile on the board.
- * @param {number} x Column index which in non-isometric view increases in the right direction.
- * @param {number} y Row index which in non-isometric view increases in the down-left direction.
+ * @param {number} props.x Column index which in non-isometric view increases in the right
+ * direction.
+ * @param {number} props.y Row index which in non-isometric view increases in the down-left
+ * direction.
  */
-export const createCoords = ({ x, y }) => {
-  return Object.assign(Object.create(methods), { _x: x, _y: y })
-}
+export const createCoords = (props) => {
+  let { x, y } = props
 
-const methods = {
-  x () { return this._x },
-  y () { return this._y },
-  setX (x) { this._x = x },
-  setY (y) { this._y = y }
+  return {
+    x () { return x },
+    y () { return y },
+    setX (val) { x = val },
+    setY (val) { y = val },
+    state () { return { x, y } }
+  }
 }

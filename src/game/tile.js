@@ -7,32 +7,30 @@ export const TileType = {
   Desert: 'Desert'
 }
 
-export const createTile = function ({ type, coords }) {
-  return Object.assign(
-    Object.create(methods),
-    { _type: type, _coords: coords }
-  )
-}
+export const createTile = props => {
+  let { type, coords } = props
 
-const methods = {
-  type () { return this._type },
-  setType (type) { this._type = type },
-  coords () { return this._coords },
-  setCoords (coords) { this._coords = coords },
-  abbreviation () {
-    switch (this.type()) {
-      case TileType.Pasture:
-        return 'P'
-      case TileType.Forest:
-        return 'F'
-      case TileType.Fields:
-        return 'f'
-      case TileType.Hills:
-        return 'H'
-      case TileType.Mountains:
-        return 'M'
-      case TileType.Desert:
-        return 'D'
+  return {
+    type () { return type },
+    coords () { return coords },
+    abbreviation () {
+      switch (type) {
+        case TileType.Pasture:
+          return 'P'
+        case TileType.Forest:
+          return 'F'
+        case TileType.Fields:
+          return 'f'
+        case TileType.Hills:
+          return 'H'
+        case TileType.Mountains:
+          return 'M'
+        case TileType.Desert:
+          return 'D'
+      }
+    },
+    state () {
+      return [type, coords.state()]
     }
   }
 }

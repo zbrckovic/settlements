@@ -63,9 +63,9 @@ describe('board', () => {
         createTile({ type: TileType.Forest, coords: createCoords({ x: 5, y: 2 }) }),
       ]
     })
-
     testBoard.rotate()
-
-    expect(testBoard).toEqual(expectedBoard)
+    const actual = testBoard.state()
+    const expected = expectedBoard.state()
+    expect(actual).toEqual(expected)
   })
 })
