@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
             filename: 'bundle.js'
         },
         resolve: {
-            extensions: ['.ts', '.js'],
+            extensions: ['.js'],
             modules: [
                 path.resolve(__dirname, './node_modules'),
                 path.resolve(__dirname, './src')
@@ -25,7 +25,7 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.(ts|js)$/,
+                    test: /\.(js)$/,
                     exclude: /node_modules/,
                     loader: 'babel-loader'
                 },
