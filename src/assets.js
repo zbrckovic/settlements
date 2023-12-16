@@ -1,11 +1,11 @@
-import { Assets } from 'pixi.js';
+import { Assets } from 'pixi.js'
 
 export const createAssetsLibrary = async () => {
-    await Assets.init({ manifest: 'assets/manifest.json' });
+  await Assets.init({ manifest: 'assets/manifest.json' })
 
-    const loadBoardScreenBundle = async () => {
-        return await Assets.loadBundle('board-screen');
-    };
-
-    return { loadBoardScreenBundle };
-};
+  return {
+    async loadBoardScreenBundle () {
+      return await Assets.loadBundle('board-screen')
+    }
+  }
+}

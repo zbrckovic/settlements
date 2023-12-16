@@ -8,39 +8,32 @@ export const TileType = {
 }
 
 /**
- * @param props.type
- * @param props.coords
+ * @param type
+ * @param coords
  */
-export function createTile (props) {
-  const {
-    type: _type,
-    coords: _coords
-  } = props
-
-  function type () { return _type }
-
-  function coords () { return _coords }
-
-  function abbreviation () {
-    switch (type()) {
-      case TileType.Pasture:
-        return 'P'
-      case TileType.Forest:
-        return 'F'
-      case TileType.Fields:
-        return 'f'
-      case TileType.Hills:
-        return 'H'
-      case TileType.Mountains:
-        return 'M'
-      case TileType.Desert:
-        return 'D'
+export function createTile ({ type, coords }) {
+  const that = {
+    type () { return type },
+    coords () { return coords },
+    abbreviation () {
+      switch (that.type()) {
+        case TileType.Pasture:
+          return 'P'
+        case TileType.Forest:
+          return 'F'
+        case TileType.Fields:
+          return 'f'
+        case TileType.Hills:
+          return 'H'
+        case TileType.Mountains:
+          return 'M'
+        case TileType.Desert:
+          return 'D'
+      }
+    },
+    state () {
+      return [that.type(), that.coords().state()]
     }
   }
-
-  function state () {
-    return [type(), coords().state()]
-  }
-
-  return { type, coords, abbreviation, state }
+  return that
 }
