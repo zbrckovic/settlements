@@ -11,13 +11,13 @@ export const createBoardRenderer = ({ plane, assets }) => {
     const boardContainer = new Container()
 
     // How much to move downwards to position the tile in the next row.
-    const tileVerticalOffset = createPoint(-tileWidth / 2, 2 * tileSide - tileRoofHeight)
+    const tileVerticalOffset = createPoint({ x: -tileWidth / 2, y: 2 * tileSide - tileRoofHeight })
       .map(plane.project)
 
     // How much to move to the right to position the tile in the next column.
-    const tileHorizontalOffset = createPoint(tileWidth, 0).map(plane.project)
+    const tileHorizontalOffset = createPoint({ x: tileWidth, y: 0 }).map(plane.project)
 
-    const topLeftTilePosition = createPoint(0, 0)
+    const topLeftTilePosition = createPoint({ x: 0, y: 0 })
     board.tiles().forEach(function (tile) {
       const coords = tile.coords()
       const rowIndex = coords.y()
@@ -37,7 +37,6 @@ export const createBoardRenderer = ({ plane, assets }) => {
     return boardContainer
   }
 
-
   return { renderBoard }
 
   /**
@@ -48,19 +47,16 @@ export const createBoardRenderer = ({ plane, assets }) => {
     const thickness = 2
     const axisLength = 1000
 
-    const xDestination = createPoint(axisLength, 0).map(plane.project)
-    const yDestination = createPoint(0, axisLength).map(plane.project)
+    const xDestination = createPoint({ x: axisLength, y: 0 }).map(plane.project)
+    const yDestination = createPoint({ x: 0, y: axisLength }).map(plane.project)
 
-    container.addChild(
-      new Graphics()
-        .lineStyle(thickness, 0xff0000)
-        .moveTo(0, 0)
-        .lineTo(xDestination.x, xDestination.y),
-      new Graphics()
-        .lineStyle(thickness, 0x00ff00)
-        .moveTo(0, 0)
-        .lineTo(yDestination.x, yDestination.y)
-    )
+    container.addChild(new Graphics()
+      .lineStyle(thickness, 0xff0000)
+      .moveTo(0, 0)
+      .lineTo(xDestination.x, xDestination.y), new Graphics()
+      .lineStyle(thickness, 0x00ff00)
+      .moveTo(0, 0)
+      .lineTo(yDestination.x, yDestination.y))
     return container
   }
 
@@ -88,16 +84,11 @@ export const createBoardRenderer = ({ plane, assets }) => {
 
     const color = calculateTileColor(tile)
 
-    const center = createPoint(0, 0)
+    const center = createPoint({ x: 0, y: 0 })
 
     const hexPoints = calculateRegularPolygonPoints(center, tileSide, 6, Math.PI / 6)
 
-    container.addChild(
-      addPointsToGraphics(
-        new Graphics().beginFill(color),
-        hexPoints.map(plane.project)
-      )
-    )
+    container.addChild(addPointsToGraphics(new Graphics().beginFill(color), hexPoints.map(plane.project)))
 
     const sprite = new Sprite(assets.hex)
     sprite.rotation = hexRotation

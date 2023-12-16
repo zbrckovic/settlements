@@ -7,7 +7,16 @@ export const TileType = {
   Desert: 'Desert'
 }
 
-export function createTile ({ type: _type, coords: _coords }) {
+/**
+ * @param props.type
+ * @param props.coords
+ */
+export function createTile (props) {
+  const {
+    type: _type,
+    coords: _coords
+  } = props
+
   function type () { return _type }
 
   function coords () { return _coords }

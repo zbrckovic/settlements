@@ -1,7 +1,10 @@
-export function createBoard ({ tiles: _tiles }) {
-  const tilesSet = new Set(_tiles)
+/**
+ * @param props.tiles
+ */
+export function createBoard (props) {
+  const _tiles = new Set(props.tiles)
 
-  function tiles () { return tilesSet }
+  function tiles () { return _tiles }
 
   function rotate () {
     tiles().forEach(tile => {

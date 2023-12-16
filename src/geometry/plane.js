@@ -1,21 +1,22 @@
 import { createPoint } from './point'
 
 /**
- * @param angleBetweenAxes - Angle between x-axis and y-axis.
- * @param tiltAngle - Angle between horizontal line and x-axis (how much to tilt the x-axis
+ * @param props.angleBetweenAxes - Angle between x-axis and y-axis.
+ * @param props.tiltAngle - Angle between horizontal line and x-axis (how much to tilt the x-axis
  * upwards).
  * @return {any}
  */
-export const createPlane = ({
-  angleBetweenAxes: _angleBetweenAxes = Math.PI / 2,
-  tiltAngle: _tiltAngle = 0
-}) => {
+export const createPlane = (props) => {
+  const {
+    angleBetweenAxes: _angleBetweenAxes = Math.PI / 2,
+    tiltAngle: _tiltAngle = 0
+  } = props
 
   function angleBetweenAxes () { return _angleBetweenAxes }
 
   function tiltAngle () { return _tiltAngle }
 
-  function project ({ x, y }) { return createPoint(myXToX(x) + myYToX(y), myYToY(y) + myXToY(x)) }
+  function project ({ x, y }) { return createPoint({x:myXToX(x) + myYToX(y), y:myYToY(y) + myXToY(x)}) }
 
   return ({
     angleBetweenAxes,
