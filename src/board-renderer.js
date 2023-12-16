@@ -1,8 +1,8 @@
 import { Container, Graphics, Sprite } from 'pixi.js'
 import { calculateRegularPolygonPoints, createPoint } from './geometry'
 import { addPointsToGraphics } from './pixi-utils'
-import { Tile } from './game/board-old'
 import { tileRoofHeight, tileSide, tileWidth } from './rendering-const'
+import { TileType } from './game/tile'
 
 export const createBoardRenderer = (plane, assets) => {
   const hexRotation = Math.PI / 6
@@ -65,17 +65,17 @@ export const createBoardRenderer = (plane, assets) => {
     if (tile === undefined) return 0x000000
 
     switch (tile) {
-      case Tile.Water:
+      case TileType.Pasture:
         return 0x0000ff
-      case Tile.Mountains:
+      case TileType.Mountains:
         return 0x00ff00
-      case Tile.Hills:
+      case TileType.Hills:
         return 0x00ffff
-      case Tile.Forest:
+      case TileType.Forest:
         return 0xff0000
-      case Tile.Plains:
+      case TileType.Fields:
         return 0xff00ff
-      case Tile.Desert:
+      case TileType.Desert:
         return 0xffff00
     }
   }
