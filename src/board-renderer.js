@@ -10,39 +10,98 @@ export const createBoardRenderer = ({ plane, assets }) => {
   function renderBoard (board) {
     const boardContainer = new Container()
 
-    // How much to move downwards to position the tile in the next row.
+    // How much to move the tile to position it in the next row of the same column.
     const tileVerticalOffset = createPoint({ x: -tileWidth / 2, y: 2 * tileSide - tileRoofHeight })
       .map(plane.project)
 
-    // How much to move to the right to position the tile in the next column.
+    // How much to move the tile to the right to position it the next column of the same row.
     const tileHorizontalOffset = createPoint({ x: tileWidth, y: 0 }).map(plane.project)
 
-    const topLeftTilePosition = createPoint({ x: 0, y: 0 })
+    const zeroTilePosition = createPoint({ x: 0, y: 0 })
     board.tiles().forEach(function (tile) {
       const coords = tile.coords()
       const rowIndex = coords.y()
       const colIndex = coords.x()
 
       const verticalOffset = tileVerticalOffset.multiply(rowIndex)
-
       const horizontalOffset = tileHorizontalOffset.multiply(colIndex)
-      const tilePosition = topLeftTilePosition.add(verticalOffset).add(horizontalOffset)
+
+      const tilePosition = zeroTilePosition
+        .add(verticalOffset)
+        .add(horizontalOffset)
+
       const tileContainer = renderTile(tile)
+
       tileContainer.position.set(tilePosition.x(), tilePosition.y())
+
       boardContainer.addChild(tileContainer)
     })
 
-    boardContainer.addChild(createAxes())
+    boardContainer.addChild(renderAxes())
 
     return boardContainer
   }
 
   return { renderBoard }
 
+  function calculateTileColor (tile) {
+    if (tile === undefined) return 0x000000
+
+    switch (tile.type()) {
+      case TileType.Pasture:
+        return 0xd1f0a8
+      case TileType.Mountains:
+        return 0xbababa
+      case TileType.Hills:
+        return 0xc97465
+      case TileType.Forest:
+        return 0x587844
+      case TileType.Fields:
+        return 0xffbd14
+      case TileType.Desert:
+        return 0xffeac7
+    }
+  }
+
+  function renderTile (tile) {
+    const container = new Container()
+
+    const center = createPoint({ x: 0, y: 0 })
+
+    const hexPoints = calculateRegularPolygonPoints(center, tileSide, 6, Math.PI / 6)
+      .map(plane.project)
+
+    container.addChild(createHexGraphics(tile, hexPoints))
+
+    const sprite = new Sprite(assets.hex)
+    sprite.rotation = hexRotation
+    sprite.scale.set(0.15, 0.15)
+    sprite.anchor.set(0.5, 0.5)
+
+    const spriteContainer = new Container()
+
+    spriteContainer.addChild(sprite)
+    spriteContainer.skew.set(Math.PI / 2 - plane.angleBetweenAxes(), 0)
+    spriteContainer.rotation = plane.tiltAngle()
+
+    // container.addChild(spriteContainer)
+
+    return container
+  }
+
   /**
-   * For debugging
+   * For debugging.
    */
-  function createAxes () {
+  function createHexGraphics (tile, points) {
+    const color = calculateTileColor(tile)
+    const graphics = new Graphics().beginFill(color)
+    return addPointsToGraphics(graphics, points)
+  }
+
+  /**
+   * For debugging.
+   */
+  function renderAxes () {
     const container = new Container()
     const thickness = 2
     const axisLength = 1000
@@ -57,52 +116,6 @@ export const createBoardRenderer = ({ plane, assets }) => {
       .lineStyle(thickness, 0x00ff00)
       .moveTo(0, 0)
       .lineTo(yDestination.x(), yDestination.y()))
-    return container
-  }
-
-  function calculateTileColor (tile) {
-    if (tile === undefined) return 0x000000
-
-    switch (tile) {
-      case TileType.Pasture:
-        return 0x0000ff
-      case TileType.Mountains:
-        return 0x00ff00
-      case TileType.Hills:
-        return 0x00ffff
-      case TileType.Forest:
-        return 0xff0000
-      case TileType.Fields:
-        return 0xff00ff
-      case TileType.Desert:
-        return 0xffff00
-    }
-  }
-
-  function renderTile (tile) {
-    const container = new Container()
-
-    const color = calculateTileColor(tile)
-
-    const center = createPoint({ x: 0, y: 0 })
-
-    const hexPoints = calculateRegularPolygonPoints(center, tileSide, 6, Math.PI / 6)
-
-    container.addChild(addPointsToGraphics(new Graphics().beginFill(color), hexPoints.map(plane.project)))
-
-    const sprite = new Sprite(assets.hex)
-    sprite.rotation = hexRotation
-    sprite.scale.set(0.15, 0.15)
-    sprite.anchor.set(0.5, 0.5)
-
-    const spriteContainer = new Container()
-
-    spriteContainer.addChild(sprite)
-    spriteContainer.skew.set(Math.PI / 2 - plane.angleBetweenAxes(), 0)
-    spriteContainer.rotation = plane.tiltAngle()
-
-    container.addChild(spriteContainer)
-
     return container
   }
 }
