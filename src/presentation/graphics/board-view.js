@@ -7,12 +7,25 @@ export const createBoardView = ({ plane, assets, board }) => {
   const container = new Container()
 
   const tileViewFactory = createTileViewFactory({ plane, assets })
-
   const tileViews = createTileViews()
-  tileViews.forEach(function (tileView) {
-    container.addChild(tileView.container())
-  })
+
+  container.addChild(...tileViews.map(tileView => tileView.container()))
   container.addChild(createAxesContainer())
+
+  const edges = (function () {
+    let minX = +Infinity
+    let minY = +Infinity
+    tileViews.forEach(function (tileView) {
+      const tileEdges = tileView.edges()
+      minX = Math.min(minX, tileEdges.x())
+      minY = Math.min(minY, tileEdges.y())
+    })
+    return createPoint({ x: minX, y: minY })
+  })()
+
+  console.log(edges.x(), edges.y())
+
+  container.position.set(-edges.x(), -edges.y())
 
   const that = {
     container () { return container },

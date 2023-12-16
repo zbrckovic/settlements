@@ -5,34 +5,61 @@ import { calculateRegularPolygonPoints, createPoint } from './geometry'
 import { tileSide } from './rendering-const'
 
 const hexRotation = Math.PI / 6
+const hexCenter = createPoint({ x: 0, y: 0 })
 
 export function createTileViewFactory ({ plane, assets }) {
-  const zeroPoint = createPoint({ x: 0, y: 0 })
-  const hexPoints = calculateRegularPolygonPoints(zeroPoint, tileSide, 6, Math.PI / 6)
+  const hexPoints = calculateRegularPolygonPoints(hexCenter, tileSide, 6, hexRotation)
     .map(plane.project)
+
+  const tileEdges = (function () {
+    let minX = +Infinity
+    let minY = +Infinity
+    hexPoints.forEach(function (point) {
+      minX = Math.min(minX, point.x())
+      minY = Math.min(minY, point.y())
+    })
+    return createPoint({ x: minX, y: minY })
+  })()
 
   return {
     createTileView (tile) {
-      const _container = createContainer()
+      const container = createContainer()
 
-      let minX = +Infinity
-      let minY = +Infinity
-      hexPoints.forEach(function (point) {
-        minX = Math.min(minX, point.x())
-        minY = Math.min(minY, point.y())
-      })
-
-      function container () { return _container }
-
-      function setPosition (position) {
-        _container.position.set(position.x(), position.y())
+      return {
+        edges () {
+          return tileEdges.add(createPoint({ x: container.position.x, y: container.position.y }))
+        },
+        container () { return container },
+        setPosition (position) {
+          container.position.set(position.x(), position.y())
+        }
       }
 
-      function minCoords () {
-        return createPoint({ x: minX, y: minY })
+      function createContainer () {
+        const container = new Container()
+
+        container.addChild(createHexGraphics(tile, hexPoints))
+
+        const sprite = new Sprite(assets.hex)
+        sprite.rotation = hexRotation
+        sprite.scale.set(0.15, 0.15)
+        sprite.anchor.set(0.5, 0.5)
+
+        const spriteContainer = new Container()
+        spriteContainer.addChild(sprite)
+        spriteContainer.skew.set(Math.PI / 2 - plane.angleBetweenAxes(), 0)
+        spriteContainer.rotation = plane.tiltAngle()
+
+        // container.addChild(spriteContainer)
+
+        return container
       }
 
-      return { container, setPosition, minCoords }
+      function createHexGraphics (tile, points) {
+        const color = calculateTileColor(tile)
+        const graphics = new Graphics().beginFill(color)
+        return addPointsToGraphics(graphics, points)
+      }
 
       function calculateTileColor () {
         if (tile === undefined) return 0x000000
@@ -52,38 +79,7 @@ export function createTileViewFactory ({ plane, assets }) {
             return 0xffeac7
         }
       }
-
-      function createContainer () {
-        const container = new Container()
-
-        container.addChild(createHexGraphics(tile, hexPoints))
-
-        const sprite = new Sprite(assets.hex)
-        sprite.rotation = hexRotation
-        sprite.scale.set(0.15, 0.15)
-        sprite.anchor.set(0.5, 0.5)
-
-        const spriteContainer = new Container()
-
-        spriteContainer.addChild(sprite)
-        spriteContainer.skew.set(Math.PI / 2 - plane.angleBetweenAxes(), 0)
-        spriteContainer.rotation = plane.tiltAngle()
-
-        container.addChild(spriteContainer)
-
-        return container
-      }
-
-      /**
-       * For debugging.
-       */
-      function createHexGraphics (tile, points) {
-        const color = calculateTileColor(tile)
-        const graphics = new Graphics().beginFill(color)
-        return addPointsToGraphics(graphics, points)
-      }
     }
   }
-
 }
 
