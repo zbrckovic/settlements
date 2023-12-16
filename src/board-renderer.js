@@ -28,7 +28,7 @@ export const createBoardRenderer = ({ plane, assets }) => {
       const horizontalOffset = tileHorizontalOffset.multiply(colIndex)
       const tilePosition = topLeftTilePosition.add(verticalOffset).add(horizontalOffset)
       const tileContainer = renderTile(tile)
-      tileContainer.position.set(tilePosition.x, tilePosition.y)
+      tileContainer.position.set(tilePosition.x(), tilePosition.y())
       boardContainer.addChild(tileContainer)
     })
 
@@ -53,10 +53,10 @@ export const createBoardRenderer = ({ plane, assets }) => {
     container.addChild(new Graphics()
       .lineStyle(thickness, 0xff0000)
       .moveTo(0, 0)
-      .lineTo(xDestination.x, xDestination.y), new Graphics()
+      .lineTo(xDestination.x(), xDestination.y()), new Graphics()
       .lineStyle(thickness, 0x00ff00)
       .moveTo(0, 0)
-      .lineTo(yDestination.x, yDestination.y))
+      .lineTo(yDestination.x(), yDestination.y()))
     return container
   }
 
