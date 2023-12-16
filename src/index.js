@@ -3,8 +3,10 @@ import { Application } from 'pixi.js'
 import './assets'
 import { createAssetsLibrary } from './assets'
 import { createBoardRenderer } from './board-renderer'
-import { Tile } from './game/board-old'
 import { createPlane } from './geometry/plane'
+import { createBoard } from './game/board'
+import { createTile, TileType } from './game/tile'
+import { createCoords } from './game/misc'
 
 const HEIGHT = 768
 const WIDTH = 1024
@@ -22,30 +24,32 @@ const startApp = async () => {
     boardScreenBundle
   )
 
-  const board = {
+  const board = createBoard({
     tiles: [
-      [Tile.Water, Tile.Water, Tile.Water, Tile.Water],
-      [Tile.Water, Tile.Mountains, Tile.Mountains, Tile.Mountains, Tile.Water],
-      [Tile.Water, Tile.Plains, Tile.Mountains, Tile.Forest, Tile.Mountains, Tile.Water],
-      [
-        Tile.Water,
-        Tile.Mountains, Tile.Mountains, Tile.Desert, Tile.Mountains, Tile.Mountains,
-        Tile.Water
-      ],
-      [undefined, Tile.Water, Tile.Hills, Tile.Mountains, Tile.Mountains, Tile.Mountains, Tile.Water],
-      [undefined, undefined, Tile.Water, Tile.Mountains, Tile.Mountains, Tile.Mountains, Tile.Water],
-      [undefined, undefined, undefined, Tile.Water, Tile.Water, Tile.Water, Tile.Water]
-    ]
-  }
+      createTile({ type: TileType.Mountains, coords: createCoords({ x: 0, y: 0 }) }),
+      createTile({ type: TileType.Pasture, coords: createCoords({ x: 1, y: 0 }) }),
+      createTile({ type: TileType.Forest, coords: createCoords({ x: 2, y: 0 }) }),
 
-  // Number of tiles which would be in the negative quadrant if we draw the board from 0, 0.
-  let leftOverflow = 0
-  board.tiles.forEach((row, rowIndex) => {
-    const firstTileIndex = row.findIndex((tile) => tile !== undefined)
-    const tileLeftOverflow = rowIndex - firstTileIndex
-    if (tileLeftOverflow > leftOverflow) {
-      leftOverflow = tileLeftOverflow
-    }
+      createTile({ type: TileType.Fields, coords: createCoords({ x: 0, y: 1 }) }),
+      createTile({ type: TileType.Hills, coords: createCoords({ x: 1, y: 1 }) }),
+      createTile({ type: TileType.Pasture, coords: createCoords({ x: 2, y: 1 }) }),
+      createTile({ type: TileType.Hills, coords: createCoords({ x: 3, y: 1 }) }),
+
+      createTile({ type: TileType.Fields, coords: createCoords({ x: 0, y: 2 }) }),
+      createTile({ type: TileType.Forest, coords: createCoords({ x: 1, y: 2 }) }),
+      createTile({ type: TileType.Desert, coords: createCoords({ x: 2, y: 2 }) }),
+      createTile({ type: TileType.Forest, coords: createCoords({ x: 3, y: 2 }) }),
+      createTile({ type: TileType.Mountains, coords: createCoords({ x: 4, y: 2 }) }),
+
+      createTile({ type: TileType.Forest, coords: createCoords({ x: 1, y: 3 }) }),
+      createTile({ type: TileType.Mountains, coords: createCoords({ x: 2, y: 3 }) }),
+      createTile({ type: TileType.Fields, coords: createCoords({ x: 3, y: 3 }) }),
+      createTile({ type: TileType.Pasture, coords: createCoords({ x: 4, y: 3 }) }),
+
+      createTile({ type: TileType.Hills, coords: createCoords({ x: 2, y: 4 }) }),
+      createTile({ type: TileType.Fields, coords: createCoords({ x: 3, y: 4 }) }),
+      createTile({ type: TileType.Pasture, coords: createCoords({ x: 4, y: 4 }) }),
+    ]
   })
 
   const boardContainer = boardRenderer.renderBoard(board)
