@@ -4,34 +4,10 @@ import { addPointsToGraphics } from './pixi-utils'
 import { tileRoofHeight, tileSide, tileWidth } from './rendering-const'
 import { TileType } from './game/tile'
 
-export const createBoardRenderer = (plane, assets) => {
+export const createBoardRenderer = ({ plane, assets }) => {
   const hexRotation = Math.PI / 6
 
-  /**
-   * For debugging
-   */
-  const createAxes = () => {
-    const container = new Container()
-    const thickness = 2
-    const axisLength = 1000
-
-    const xDestination = createPoint(axisLength, 0).map(plane.project)
-    const yDestination = createPoint(0, axisLength).map(plane.project)
-
-    container.addChild(
-      new Graphics()
-        .lineStyle(thickness, 0xff0000)
-        .moveTo(0, 0)
-        .lineTo(xDestination.x, xDestination.y),
-      new Graphics()
-        .lineStyle(thickness, 0x00ff00)
-        .moveTo(0, 0)
-        .lineTo(yDestination.x, yDestination.y)
-    )
-    return container
-  }
-
-  const renderBoard = board => {
+  function renderBoard (board) {
     const boardContainer = new Container()
 
     // How much to move downwards to position the tile in the next row.
@@ -61,7 +37,34 @@ export const createBoardRenderer = (plane, assets) => {
     return boardContainer
   }
 
-  const calculateTileColor = (tile) => {
+
+  return { renderBoard }
+
+  /**
+   * For debugging
+   */
+  function createAxes () {
+    const container = new Container()
+    const thickness = 2
+    const axisLength = 1000
+
+    const xDestination = createPoint(axisLength, 0).map(plane.project)
+    const yDestination = createPoint(0, axisLength).map(plane.project)
+
+    container.addChild(
+      new Graphics()
+        .lineStyle(thickness, 0xff0000)
+        .moveTo(0, 0)
+        .lineTo(xDestination.x, xDestination.y),
+      new Graphics()
+        .lineStyle(thickness, 0x00ff00)
+        .moveTo(0, 0)
+        .lineTo(yDestination.x, yDestination.y)
+    )
+    return container
+  }
+
+  function calculateTileColor (tile) {
     if (tile === undefined) return 0x000000
 
     switch (tile) {
@@ -80,7 +83,7 @@ export const createBoardRenderer = (plane, assets) => {
     }
   }
 
-  const renderTile = tile => {
+  function renderTile (tile) {
     const container = new Container()
 
     const color = calculateTileColor(tile)
@@ -104,15 +107,13 @@ export const createBoardRenderer = (plane, assets) => {
     const spriteContainer = new Container()
 
     spriteContainer.addChild(sprite)
-    spriteContainer.skew.set(Math.PI / 2 - plane.angleBetweenAxes, 0)
-    spriteContainer.rotation = plane.tiltAngle
+    spriteContainer.skew.set(Math.PI / 2 - plane.angleBetweenAxes(), 0)
+    spriteContainer.rotation = plane.tiltAngle()
 
     container.addChild(spriteContainer)
 
     return container
   }
-
-  return { renderBoard }
 }
 
 

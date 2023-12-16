@@ -19,10 +19,8 @@ const startApp = async () => {
   globalThis.__PIXI_APP__ = app
   document.body.appendChild(app.view)
 
-  const boardRenderer = createBoardRenderer(
-    createPlane(Math.PI - Math.PI / 3, Math.PI / 6),
-    boardScreenBundle
-  )
+  const plane = createPlane({ angleBetweenAxes: Math.PI - Math.PI / 3, tiltAngle: Math.PI / 6 })
+  const boardRenderer = createBoardRenderer({ plane, assets: boardScreenBundle })
 
   const board = createBoard({
     tiles: [
