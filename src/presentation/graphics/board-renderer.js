@@ -1,8 +1,8 @@
 import { Container, Graphics, Sprite } from 'pixi.js'
 import { calculateRegularPolygonPoints, createPoint } from './geometry'
-import { addPointsToGraphics } from './pixi-utils'
+import { addPointsToGraphics } from '../../pixi-utils'
 import { tileRoofHeight, tileSide, tileWidth } from './rendering-const'
-import { TileType } from './game/tile'
+import { TileType } from '../../game/tile'
 
 export const createBoardRenderer = ({ plane, assets }) => {
   const hexRotation = Math.PI / 6
