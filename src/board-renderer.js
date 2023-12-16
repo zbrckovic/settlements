@@ -67,7 +67,6 @@ export const createBoardRenderer = ({ plane, assets }) => {
     const container = new Container()
 
     const center = createPoint({ x: 0, y: 0 })
-
     const hexPoints = calculateRegularPolygonPoints(center, tileSide, 6, Math.PI / 6)
       .map(plane.project)
 
@@ -84,7 +83,7 @@ export const createBoardRenderer = ({ plane, assets }) => {
     spriteContainer.skew.set(Math.PI / 2 - plane.angleBetweenAxes(), 0)
     spriteContainer.rotation = plane.tiltAngle()
 
-    // container.addChild(spriteContainer)
+    container.addChild(spriteContainer)
 
     return container
   }
