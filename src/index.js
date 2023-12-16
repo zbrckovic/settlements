@@ -11,6 +11,9 @@ import { createCoords } from './game/misc'
 const HEIGHT = 768
 const WIDTH = 1024
 
+const angleBetweenAxes = Math.PI - Math.PI / 3
+const tiltAngle = Math.PI / 6
+
 const startApp = async () => {
   const assetsLibrary = await createAssetsLibrary()
   const boardScreenBundle = await assetsLibrary.loadBoardScreenBundle()
@@ -19,7 +22,7 @@ const startApp = async () => {
   globalThis.__PIXI_APP__ = app
   document.body.appendChild(app.view)
 
-  const plane = createPlane({ angleBetweenAxes: Math.PI - Math.PI / 3, tiltAngle: Math.PI / 6 })
+  const plane = createPlane({ angleBetweenAxes: undefined, tiltAngle: 0 })
   const boardRenderer = createBoardRenderer({ plane, assets: boardScreenBundle })
 
   const board = createBoard({
@@ -51,7 +54,7 @@ const startApp = async () => {
   })
 
   const boardContainer = boardRenderer.renderBoard(board)
-  boardContainer.position.set(WIDTH / 2 + 100, 100)
+  boardContainer.position.set(0, 0)
   app.stage.addChild(boardContainer)
 }
 
