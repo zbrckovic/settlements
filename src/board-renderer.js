@@ -7,6 +7,11 @@ import { TileType } from './game/tile'
 export const createBoardRenderer = ({ plane, assets }) => {
   const hexRotation = Math.PI / 6
 
+  const hexPoints = calculateRegularPolygonPoints(
+    createPoint({ x: 0, y: 0 }), tileSide, 6, Math.PI / 6
+  )
+    .map(plane.project)
+
   function renderBoard (board) {
     const boardContainer = new Container()
 
@@ -65,10 +70,6 @@ export const createBoardRenderer = ({ plane, assets }) => {
 
   function renderTile (tile) {
     const container = new Container()
-
-    const center = createPoint({ x: 0, y: 0 })
-    const hexPoints = calculateRegularPolygonPoints(center, tileSide, 6, Math.PI / 6)
-      .map(plane.project)
 
     container.addChild(createHexGraphics(tile, hexPoints))
 
