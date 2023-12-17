@@ -53,7 +53,6 @@ const startApp = async () => {
   const boardContainer = new Container()
   const boardView = createBoardView({ plane, assets: boardScreenBundle, board })
   boardContainer.addChild(boardView.container())
-  boardContainer.position.set(10, 10)
 
   app.stage.addChild(boardContainer)
 }
