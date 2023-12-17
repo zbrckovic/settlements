@@ -27,14 +27,13 @@ export function createTileViewFactory ({ plane, assets }) {
             minY = Math.min(minY, point.y())
             maxY = Math.max(maxY, point.y())
           })
-          const position = Point.create({ x: minX, y: minY })
-          const width = maxX - minX
-          const height = maxY - minY
-          return Frame.create({ position, width, height })
+          const minPoint = Point.create({ x: minX, y: minY })
+          const maxPoint = Point.create({ x: maxX, y: maxY })
+          return Frame.create({ minPoint, maxPoint })
         },
         frameAbs () {
           const position = Point.create(that.container().position)
-          return that.frame().withMappedPosition(pos => pos.withAdded(position))
+          return that.frame().withMinPoint(that.frame().minPoint().withAdded(position))
         },
         container () { return container },
         setPosition (position) {
