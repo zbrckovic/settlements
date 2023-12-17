@@ -1,7 +1,7 @@
 import { TileType } from '../../game/tile'
 import { Container, Graphics, Sprite } from 'pixi.js'
 import { addPointsToGraphics } from '../../pixi-utils'
-import { calculateRegularPolygonPoints, createPoint } from './geometry'
+import { calculateRegularPolygonPoints, createFrame, createPoint } from './geometry'
 import { tileSide } from './rendering-const'
 
 const hexRotation = Math.PI / 6
@@ -11,23 +11,26 @@ export function createTileViewFactory ({ plane, assets }) {
   const hexPoints = calculateRegularPolygonPoints(hexCenter, tileSide, 6, hexRotation)
     .map(plane.project)
 
-  const tileEdges = (function () {
-    let minX = +Infinity
-    let minY = +Infinity
-    hexPoints.forEach(function (point) {
-      minX = Math.min(minX, point.x())
-      minY = Math.min(minY, point.y())
-    })
-    return createPoint({ x: minX, y: minY })
-  })()
-
   return {
     createTileView (tile) {
       const container = createContainer()
 
       return {
-        edges () {
-          return tileEdges.add(createPoint({ x: container.position.x, y: container.position.y }))
+        frame () {
+          let minX = +Infinity
+          let maxX = -Infinity
+          let minY = +Infinity
+          let maxY = -Infinity
+          hexPoints.forEach(function (point) {
+            minX = Math.min(minX, point.x())
+            maxX = Math.max(maxX, point.x())
+            minY = Math.min(minY, point.y())
+            maxY = Math.max(maxY, point.y())
+          })
+          const position = createPoint({ x: minX, y: minY })
+          const width = maxX - minX
+          const height = maxY - minY
+          return createFrame({ position, width, height })
         },
         container () { return container },
         setPosition (position) {
