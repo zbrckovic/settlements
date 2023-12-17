@@ -1,26 +1,26 @@
 export class Frame {
-  static create ({ minPoint, maxPoint }) {
-    return new Frame({ minPoint, maxPoint })
+  static create ({ point1, point2 }) {
+    return new Frame({ point1, point2 })
   }
 
-  constructor ({ minPoint, maxPoint }) {
-    this._minPoint = minPoint
-    this._maxPoint = maxPoint
+  constructor ({ point1, point2 }) {
+    this._point1 = point1
+    this._point2 = point2
   }
 
-  minPoint () { return this._minPoint }
+  point1 () { return this._point1 }
 
-  maxPoint () { return this._maxPoint }
+  point2 () { return this._point2 }
 
-  width () { return this.maxPoint().x() - this.minPoint().x() }
+  width () { return this.point2().x() - this.point1().x() }
 
-  height () { return this.maxPoint().y() - this.minPoint().y() }
+  height () { return this.point2().y() - this.point1().y() }
 
-  withMinPoint (minPoint) {
-    return Frame.create({ minPoint, maxPoint: this.maxPoint() })
+  withPoint1 (point1) {
+    return Frame.create({ point1, point2: this.point2() })
   }
 
-  withMaxPoint (maxPoint) {
-    return Frame.create({ minPoint: this.minPoint(), maxPoint })
+  withPoint2 (point2) {
+    return Frame.create({ point1: this.point1(), point2 })
   }
 }

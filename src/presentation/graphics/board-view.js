@@ -20,17 +20,17 @@ export const createBoardView = ({ plane, assets, board }) => {
     tileViews.forEach(function (tileView) {
       const tileFrame = tileView.frameAbs()
 
-      minX = Math.min(minX, tileFrame.minPoint().x())
-      maxX = Math.max(maxX, tileFrame.minPoint().x() + tileFrame.width())
-      minY = Math.min(minY, tileFrame.minPoint().y())
-      maxY = Math.max(maxY, tileFrame.minPoint().y() + tileFrame.height())
+      minX = Math.min(minX, tileFrame.point1().x())
+      maxX = Math.max(maxX, tileFrame.point1().x() + tileFrame.width())
+      minY = Math.min(minY, tileFrame.point1().y())
+      maxY = Math.max(maxY, tileFrame.point1().y() + tileFrame.height())
     })
-    const minPoint = Point.create({ x: minX, y: minY })
-    const maxPoint = Point.create({ x: maxX, y: maxY })
-    return Frame.create({ minPoint, maxPoint })
+    const point1 = Point.create({ x: minX, y: minY })
+    const point2 = Point.create({ x: maxX, y: maxY })
+    return Frame.create({ point1, point2 })
   })()
 
-  container.position.set(-frame.minPoint().x(), -frame.minPoint().y())
+  container.position.set(-frame.point1().x(), -frame.point1().y())
 
   const that = {
     container () { return container },
