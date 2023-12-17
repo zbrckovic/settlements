@@ -1,3 +1,9 @@
+/**
+ * A rectangle defined by two points.
+ * @class
+ * @param {Object} point1 - The point with smallest x and y.
+ * @param {Object} point2 - The point with largest x and y.
+ */
 export class Frame {
   static create ({ point1, point2 }) {
     return new Frame({ point1, point2 })

@@ -67,10 +67,10 @@ export const createBoardView = ({ plane, assets, board }) => {
     const rowIndex = coords.y()
     const colIndex = coords.x()
 
-    const verticalOffset = tileVerticalOffset.withMultiplier(rowIndex)
-    const horizontalOffset = tileHorizontalOffset.withMultiplier(colIndex)
+    const verticalOffset = tileVerticalOffset.withMultiplication(rowIndex)
+    const horizontalOffset = tileHorizontalOffset.withMultiplication(colIndex)
 
-    return zeroTilePosition.withAdded(verticalOffset).withAdded(horizontalOffset)
+    return zeroTilePosition.withAddition(verticalOffset).withAddition(horizontalOffset)
   }
 
   /**

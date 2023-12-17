@@ -33,7 +33,7 @@ export function createTileViewFactory ({ plane, assets }) {
         },
         frameAbs () {
           const position = Point.create(that.container().position)
-          return that.frame().withPoint1(that.frame().point1().withAdded(position))
+          return that.frame().withPoint1(that.frame().point1().withAddition(position))
         },
         container () { return container },
         setPosition (position) {

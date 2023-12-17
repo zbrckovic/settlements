@@ -41,7 +41,7 @@ export class Point {
 
   withMappedY (mapper) { return Point.create({ x: this.x(), y: mapper(this.y()) }) }
 
-  withAdded (other) { return Point.create({ x: this.x() + other.x(), y: this.y() + other.y() }) }
+  withAddition (other) { return Point.create({ x: this.x() + other.x(), y: this.y() + other.y() }) }
 
-  withMultiplier (factor) { return Point.create({ x: this.x() * factor, y: this.y() * factor })}
+  withMultiplication (factor) { return Point.create({ x: this.x() * factor, y: this.y() * factor })}
 }
