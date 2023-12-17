@@ -1,5 +1,5 @@
 import { Container, Graphics } from 'pixi.js'
-import { createFrame, createPoint } from './geometry'
+import { Frame, Point } from './geometry'
 import { tileRoofHeight, tileSide, tileWidth } from './rendering-const'
 import { createTileViewFactory } from './tile-view'
 
@@ -25,10 +25,10 @@ export const createBoardView = ({ plane, assets, board }) => {
       minY = Math.min(minY, tileFrame.position().y())
       maxY = Math.max(maxY, tileFrame.position().y() + tileFrame.height())
     })
-    const position = createPoint({ x: minX, y: minY })
+    const position = Point.create({ x: minX, y: minY })
     const width = maxX - minX
     const height = maxY - minY
-    return createFrame({ position, width, height })
+    return Frame.create({ position, width, height })
   })()
 
   container.position.set(-frame.position().x(), -frame.position().y())
@@ -57,13 +57,13 @@ export const createBoardView = ({ plane, assets, board }) => {
 
   function calculateTilePosition (tile) {
     // How much to move the tile to position it in the next row of the same column.
-    const tileVerticalOffset = createPoint({ x: -tileWidth / 2, y: 2 * tileSide - tileRoofHeight })
+    const tileVerticalOffset = Point.create({ x: -tileWidth / 2, y: 2 * tileSide - tileRoofHeight })
       .map(plane.project)
 
     // How much to move the tile to the right to position it the next column of the same row.
-    const tileHorizontalOffset = createPoint({ x: tileWidth, y: 0 }).map(plane.project)
+    const tileHorizontalOffset = Point.create({ x: tileWidth, y: 0 }).map(plane.project)
 
-    const zeroTilePosition = createPoint({ x: 0, y: 0 })
+    const zeroTilePosition = Point.create({ x: 0, y: 0 })
     const coords = tile.coords()
     const rowIndex = coords.y()
     const colIndex = coords.x()
@@ -82,8 +82,8 @@ export const createBoardView = ({ plane, assets, board }) => {
     const thickness = 2
     const axisLength = 1000
 
-    const xDestination = createPoint({ x: axisLength, y: 0 }).map(plane.project)
-    const yDestination = createPoint({ x: 0, y: axisLength }).map(plane.project)
+    const xDestination = Point.create({ x: axisLength, y: 0 }).map(plane.project)
+    const yDestination = Point.create({ x: 0, y: axisLength }).map(plane.project)
 
     container.addChild(new Graphics()
       .lineStyle(thickness, 0xff0000)

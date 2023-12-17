@@ -1,11 +1,11 @@
 import { TileType } from '../../game/tile'
 import { Container, Graphics, Sprite } from 'pixi.js'
 import { addPointsToGraphics } from '../../pixi-utils'
-import { calculateRegularPolygonPoints, createFrame, createPoint } from './geometry'
+import { calculateRegularPolygonPoints, Frame, Point } from './geometry'
 import { tileSide } from './rendering-const'
 
 const hexRotation = Math.PI / 6
-const hexCenter = createPoint({ x: 0, y: 0 })
+const hexCenter = Point.create({ x: 0, y: 0 })
 
 export function createTileViewFactory ({ plane, assets }) {
   const hexPoints = calculateRegularPolygonPoints(hexCenter, tileSide, 6, hexRotation)
@@ -27,13 +27,13 @@ export function createTileViewFactory ({ plane, assets }) {
             minY = Math.min(minY, point.y())
             maxY = Math.max(maxY, point.y())
           })
-          const position = createPoint({ x: minX, y: minY })
+          const position = Point.create({ x: minX, y: minY })
           const width = maxX - minX
           const height = maxY - minY
-          return createFrame({ position, width, height })
+          return Frame.create({ position, width, height })
         },
         frameAbs () {
-          const position = createPoint(that.container().position)
+          const position = Point.create(that.container().position)
           return that.frame().withMappedPosition(pos => pos.withAdded(position))
         },
         container () { return container },

@@ -1,4 +1,4 @@
-import { createPoint } from './point'
+import { Point } from './point'
 
 /**
  * @param angleBetweenAxes - Angle between x-axis and y-axis.
@@ -10,7 +10,7 @@ export const createPlane = ({ angleBetweenAxes = Math.PI / 2, tiltAngle = 0 }) =
     angleBetweenAxes () { return angleBetweenAxes },
     tiltAngle () { return tiltAngle },
     project (vector) {
-      return createPoint({
+      return Point.create({
         x: myXToX(vector.x()) + myYToX(vector.y()),
         y: myYToY(vector.y()) + myXToY(vector.x())
       })
