@@ -1,6 +1,7 @@
 /**
  * @param {number} x
  * @param {number} y
+ * @note Immutable.
  */
 export function createPoint ({ x, y }) {
   const that = {
@@ -13,7 +14,7 @@ export function createPoint ({ x, y }) {
       const vDistance = other.y() - that.y()
       return Math.sqrt(Math.pow(hDistance, 2) + Math.pow(vDistance, 2))
     },
-    rotate (pivot, angle) {
+    withRotation (pivot, angle) {
       const hDistance = that.x() - pivot.x()
       const vDistance = that.y() - pivot.y()
       const radius = Math.sqrt(Math.pow(hDistance, 2) + Math.pow(vDistance, 2))
@@ -25,13 +26,11 @@ export function createPoint ({ x, y }) {
 
       return createPoint({ x: newX, y: newY })
     },
-    map (mapper) {
-      return mapper(createPoint({ x: that.x(), y: that.y() }))
-    },
-    mapX (mapper) { return createPoint({ x: mapper(that.x()), y: that.y() }) },
-    mapY (mapper) { return createPoint({ x: that.x(), y: mapper(that.y()) }) },
-    add (other) { return createPoint({ x: that.x() + other.x(), y: that.y() + other.y() }) },
-    multiply (factor) { return createPoint({ x: that.x() * factor, y: that.y() * factor })}
+    map (mapper) { return mapper(that) },
+    withMappedX (mapper) { return createPoint({ x: mapper(that.x()), y: that.y() }) },
+    withMappedY (mapper) { return createPoint({ x: that.x(), y: mapper(that.y()) }) },
+    withAdded (other) { return createPoint({ x: that.x() + other.x(), y: that.y() + other.y() }) },
+    withMultiplier (factor) { return createPoint({ x: that.x() * factor, y: that.y() * factor })}
   }
   return that
 }

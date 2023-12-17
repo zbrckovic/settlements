@@ -15,7 +15,7 @@ export function createTileViewFactory ({ plane, assets }) {
     createTileView (tile) {
       const container = createContainer()
 
-      return {
+      const that = {
         frame () {
           let minX = +Infinity
           let maxX = -Infinity
@@ -32,11 +32,16 @@ export function createTileViewFactory ({ plane, assets }) {
           const height = maxY - minY
           return createFrame({ position, width, height })
         },
+        frameAbs () {
+          const position = createPoint(that.container().position)
+          return that.frame().withMappedPosition(pos => pos.withAdded(position))
+        },
         container () { return container },
         setPosition (position) {
           container.position.set(position.x(), position.y())
         }
       }
+      return that
 
       function createContainer () {
         const container = new Container()

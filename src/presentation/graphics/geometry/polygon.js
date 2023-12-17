@@ -12,7 +12,7 @@ export const calculateRegularPolygonPoints = (
   for (let i = 0; i < sides; i++) {
     const x = radius * Math.cos(i * angle) + center.x()
     const y = radius * Math.sin(i * angle) + center.y()
-    points.push(createPoint({ x, y }).rotate(center, rotation))
+    points.push(createPoint({ x, y }).withRotation(center, rotation))
   }
   return points
 }

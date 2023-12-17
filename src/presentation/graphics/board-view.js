@@ -18,21 +18,12 @@ export const createBoardView = ({ plane, assets, board }) => {
     let minY = +Infinity
     let maxY = -Infinity
     tileViews.forEach(function (tileView) {
-      const tileFrameLocal = tileView.frame()
-      const tilePositionInBoard = createPoint({
-        x: tileFrameLocal.position().x() + tileView.container().position.x,
-        y: tileFrameLocal.position().y() + tileView.container().position.y
-      })
-      const tileFrameInBoard = createFrame({
-        position: tilePositionInBoard,
-        width: tileFrameLocal.width(),
-        height: tileFrameLocal.height()
-      })
+      const tileFrame = tileView.frameAbs()
 
-      minX = Math.min(minX, tileFrameInBoard.position().x())
-      maxX = Math.max(maxX, tileFrameInBoard.position().x() + tileFrameInBoard.width())
-      minY = Math.min(minY, tileFrameInBoard.position().y())
-      maxY = Math.max(maxY, tileFrameInBoard.position().y() + tileFrameInBoard.height())
+      minX = Math.min(minX, tileFrame.position().x())
+      maxX = Math.max(maxX, tileFrame.position().x() + tileFrame.width())
+      minY = Math.min(minY, tileFrame.position().y())
+      maxY = Math.max(maxY, tileFrame.position().y() + tileFrame.height())
     })
     const position = createPoint({ x: minX, y: minY })
     const width = maxX - minX
@@ -77,10 +68,10 @@ export const createBoardView = ({ plane, assets, board }) => {
     const rowIndex = coords.y()
     const colIndex = coords.x()
 
-    const verticalOffset = tileVerticalOffset.multiply(rowIndex)
-    const horizontalOffset = tileHorizontalOffset.multiply(colIndex)
+    const verticalOffset = tileVerticalOffset.withMultiplier(rowIndex)
+    const horizontalOffset = tileHorizontalOffset.withMultiplier(colIndex)
 
-    return zeroTilePosition.add(verticalOffset).add(horizontalOffset)
+    return zeroTilePosition.withAdded(verticalOffset).withAdded(horizontalOffset)
   }
 
   /**
