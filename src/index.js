@@ -2,7 +2,7 @@ import '@pixi/graphics-extras'
 import { Application, Container } from 'pixi.js'
 import './assets'
 import { AssetsLibrary } from './assets'
-import { createBoardView, Plane } from './presentation/graphics'
+import { BoardView, Plane } from './presentation/graphics'
 import { createBoard } from './game/board'
 import { createTile, TileType } from './game/tile'
 import { createCoords } from './game/misc'
@@ -51,7 +51,7 @@ const startApp = async () => {
   })
 
   const boardContainer = new Container()
-  const boardView = createBoardView({ plane, assets: boardScreenBundle, board })
+  const boardView = BoardView.create({ plane, assets: boardScreenBundle, board })
   boardContainer.addChild(boardView.container())
 
   app.stage.addChild(boardContainer)
