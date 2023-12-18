@@ -1,8 +1,3 @@
-/**
- * A rectangle defined by two points.
- * @param {Object} point1 - The point with smallest x and y.
- * @param {Object} point2 - The point with largest x and y.
- */
 export class Frame {
   #point1
   #point2
@@ -11,6 +6,11 @@ export class Frame {
     return new Frame({ point1, point2 })
   }
 
+  /**
+   * A rectangle defined by two points.
+   * @param {Object} point1 - The point with smallest x and y.
+   * @param {Object} point2 - The point with largest x and y.
+   */
   constructor ({ point1, point2 }) {
     this.#point1 = point1
     this.#point2 = point2

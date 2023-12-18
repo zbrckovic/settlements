@@ -1,11 +1,11 @@
 import { Point } from './point'
 
-export const calculateRegularPolygonPoints = (
+export function calculateRegularPolygonPoints (
   center,
   radius,
   sides,
   rotation = 0
-) => {
+) {
   const points = []
   const angle = 2 * Math.PI / sides
 

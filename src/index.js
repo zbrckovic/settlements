@@ -2,7 +2,7 @@ import '@pixi/graphics-extras'
 import { Application, Container } from 'pixi.js'
 import './assets'
 import { AssetsLibrary } from './assets'
-import { createPlane, createBoardView } from './presentation/graphics'
+import { createBoardView, Plane } from './presentation/graphics'
 import { createBoard } from './game/board'
 import { createTile, TileType } from './game/tile'
 import { createCoords } from './game/misc'
@@ -21,7 +21,7 @@ const startApp = async () => {
   globalThis.__PIXI_APP__ = app
   document.body.appendChild(app.view)
 
-  const plane = createPlane({ angleBetweenAxes, tiltAngle })
+  const plane = Plane.create({ angleBetweenAxes, tiltAngle })
   const board = createBoard({
     tiles: [
       createTile({ type: TileType.Mountains, coords: createCoords({ x: 0, y: 0 }) }),

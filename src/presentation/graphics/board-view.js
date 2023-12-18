@@ -57,10 +57,10 @@ export const createBoardView = ({ plane, assets, board }) => {
   function calculateTilePosition (tile) {
     // How much to move the tile to position it in the next row of the same column.
     const tileVerticalOffset = Point.create({ x: -tileWidth / 2, y: 2 * tileSide - tileRoofHeight })
-      .map(plane.project)
+      .map(p => plane.project(p))
 
     // How much to move the tile to the right to position it the next column of the same row.
-    const tileHorizontalOffset = Point.create({ x: tileWidth, y: 0 }).map(plane.project)
+    const tileHorizontalOffset = Point.create({ x: tileWidth, y: 0 }).map(p => plane.project(p))
 
     const zeroTilePosition = Point.create({ x: 0, y: 0 })
     const coords = tile.coords()
@@ -81,8 +81,8 @@ export const createBoardView = ({ plane, assets, board }) => {
     const thickness = 2
     const axisLength = 1000
 
-    const xDestination = Point.create({ x: axisLength, y: 0 }).map(plane.project)
-    const yDestination = Point.create({ x: 0, y: axisLength }).map(plane.project)
+    const xDestination = Point.create({ x: axisLength, y: 0 }).map(p => plane.project(p))
+    const yDestination = Point.create({ x: 0, y: axisLength }).map(p => plane.project(p))
 
     container.addChild(new Graphics()
       .lineStyle(thickness, 0xff0000)

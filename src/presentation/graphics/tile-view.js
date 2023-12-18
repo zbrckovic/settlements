@@ -9,7 +9,7 @@ const hexCenter = Point.create({ x: 0, y: 0 })
 
 export function createTileViewFactory ({ plane, assets }) {
   const hexPoints = calculateRegularPolygonPoints(hexCenter, tileSide, 6, hexRotation)
-    .map(plane.project)
+    .map(p => plane.project(p))
 
   return {
     createTileView (tile) {

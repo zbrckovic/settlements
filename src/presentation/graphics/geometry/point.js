@@ -1,16 +1,19 @@
 export class Point {
+  #x
+  #y
+
   static create ({ x, y }) {
     return new Point({ x, y })
   }
 
   constructor ({ x, y }) {
-    this._x = x
-    this._y = y
+    this.#x = x
+    this.#y = y
   }
 
-  x () { return this._x }
+  x () { return this.#x }
 
-  y () { return this._y }
+  y () { return this.#y }
 
   withX (x) { return Point.create({ x, y: this.y() }) }
 

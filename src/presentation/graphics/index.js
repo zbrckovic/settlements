@@ -1,2 +1,2 @@
 export { createBoardView } from './board-view'
-export { createPlane } from './geometry/plane'
+export { Plane } from './geometry/plane'
