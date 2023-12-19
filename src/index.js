@@ -50,7 +50,7 @@ const startApp = async () => {
     ]
   })
 
-  export function generateBoard () {
+  function generateBoard () {
     //[pasture, forrest, fields, hills, mountains, desert]
     const fields = [4, 4, 4, 3, 3, 1];
     const tiles = [];
