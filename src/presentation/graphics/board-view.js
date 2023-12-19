@@ -11,7 +11,6 @@ export class BoardView {
   #plane
   #assets
   #board
-  #tileViewFactory
   #container
 
   constructor ({ plane, assets, board }) {

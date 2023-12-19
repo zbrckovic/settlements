@@ -1,65 +1,49 @@
 import { TileType } from '../../game/tile'
 import { Container, Graphics, Sprite } from 'pixi.js'
 import { addPointsToGraphics } from '../../pixi-utils'
-import { calculateRegularPolygonPoints, Frame, Point } from './geometry'
-import { tileSide } from './rendering-const'
-
-// Every hexagon is rotated by 30deg so the vertex points downwards.
-const HEX_ROTATION = Math.PI / 6
-const HEX_CENTER = Point.create({ x: 0, y: 0 })
+import { Point } from './geometry'
+import { TileGeometry } from './tile-geometry'
 
 export class TileView {
-  static create(props) {
+  static create (props) {
     return new TileView(props)
   }
 
-  #plane
+  /**
+   * Game model object.
+   */
   #tile
-  #hexPoints
   #assets
+  #geometry
+  /**
+   * PixiJS display object containing the tile's graphics.
+   */
   #container
 
-  constructor ({ plane, tile, assets }) {
-    this.#plane = plane
+  constructor ({ tile, plane, assets }) {
     this.#tile = tile
-    this.#hexPoints = this.#calculateHexPoints()
     this.#assets = assets
+    this.#geometry = TileGeometry.create({ plane })
     this.#container = new Container()
 
     this.container().addChild(this.#createHexGraphics())
 
     const sprite = new Sprite(this.#assets.hex)
-    sprite.rotation = HEX_ROTATION
+    sprite.rotation = TileGeometry.HEX_ROTATION
+
     sprite.scale.set(0.15, 0.15)
     sprite.anchor.set(0.5, 0.5)
 
     const spriteContainer = new Container()
     spriteContainer.addChild(sprite)
-    spriteContainer.skew.set(Math.PI / 2 - this.#plane.angleBetweenAxes(), 0)
-    spriteContainer.rotation = this.#plane.tiltAngle()
+    spriteContainer.skew.set(Math.PI / 2 - this.#geometry.plane().angleBetweenAxes(), 0)
+    spriteContainer.rotation = this.#geometry.plane().tiltAngle()
 
     this.container().addChild(spriteContainer)
   }
 
-  #calculateHexPoints () {
-    return calculateRegularPolygonPoints(HEX_CENTER, tileSide, 6, HEX_ROTATION)
-      .map(p => this.#plane.project(p))
-  }
-
   frame () {
-    let minX = +Infinity
-    let maxX = -Infinity
-    let minY = +Infinity
-    let maxY = -Infinity
-    this.#hexPoints.forEach(function (point) {
-      minX = Math.min(minX, point.x())
-      maxX = Math.max(maxX, point.x())
-      minY = Math.min(minY, point.y())
-      maxY = Math.max(maxY, point.y())
-    })
-    const point1 = Point.create({ x: minX, y: minY })
-    const point2 = Point.create({ x: maxX, y: maxY })
-    return Frame.create({ point1, point2 })
+    return this.#geometry.frame()
   }
 
   frameAbs () {
@@ -69,14 +53,21 @@ export class TileView {
 
   container () { return this.#container }
 
+  /**
+   * Moves tile's container, so its center is at the specified position.
+   */
   setPosition (position) {
     this.#container.position.set(position.x(), position.y())
   }
 
+  /**
+   * Creates a Graphics object which draws a tile for cases when we are not using sprites (for
+   * example, when developing and debugging).
+   */
   #createHexGraphics () {
     const color = this.#calculateTileColor()
     const graphics = new Graphics().beginFill(color)
-    return addPointsToGraphics(graphics, this.#hexPoints)
+    return addPointsToGraphics(graphics, this.#geometry.hexPoints())
   }
 
   #calculateTileColor () {
@@ -98,3 +89,4 @@ export class TileView {
     }
   }
 }
+
