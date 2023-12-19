@@ -8,7 +8,6 @@ export class BoardView {
     return new BoardView(props)
   }
 
-
   /**
    * Game model object.
    */
