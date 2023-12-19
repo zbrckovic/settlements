@@ -31,6 +31,8 @@ export class BoardView {
     this.#container.addChild(this.#createAxesContainer())
 
     const frame = this.#calculateFrame()
+
+    // Position the container so that the whole content fits inside the positive quadrant.
     this.#container.position.set(-frame.point1().x(), -frame.point1().y())
   }
 
