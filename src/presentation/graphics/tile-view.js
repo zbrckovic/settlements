@@ -42,10 +42,16 @@ export class TileView {
     this.container().addChild(spriteContainer)
   }
 
+  /**
+   * The smallest frame which contains all hex points in tile's local space.
+   */
   frame () {
     return this.#geometry.frame()
   }
 
+  /**
+   * Like frame(), but in parent's coordinate space.
+   */
   frameAbs () {
     const position = Point.create(this.container().position)
     return this.frame().withPoint1(this.frame().point1().withAddition(position))

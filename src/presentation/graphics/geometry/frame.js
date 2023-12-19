@@ -1,4 +1,27 @@
+import { Point } from './point'
+
 export class Frame {
+  /**
+   * Calculates the smallest frame which contains all points.
+   */
+  static calculateContainingFrame(...points) {
+    if (points.length === 0) throw new Error('points not provided')
+
+    let minX = +Infinity
+    let maxX = -Infinity
+    let minY = +Infinity
+    let maxY = -Infinity
+    points.forEach(function (point) {
+      minX = Math.min(minX, point.x())
+      maxX = Math.max(maxX, point.x())
+      minY = Math.min(minY, point.y())
+      maxY = Math.max(maxY, point.y())
+    })
+    const point1 = Point.create({ x: minX, y: minY })
+    const point2 = Point.create({ x: maxX, y: maxY })
+    return Frame.create({ point1, point2 })
+  }
+
   #point1
   #point2
 

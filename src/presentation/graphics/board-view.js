@@ -11,45 +11,35 @@ export class BoardView {
   #plane
   #assets
   #board
+  #tileViews
   #container
 
   constructor ({ plane, assets, board }) {
     this.#plane = plane
     this.#assets = assets
     this.#board = board
-
+    this.#tileViews = this.#createTileViews()
     this.#container = new Container()
 
-    const tileViews = this.#createTileViews()
-
-    this.#container.addChild(...tileViews.map(tileView => tileView.container()))
+    this.#container.addChild(...this.#tileViews.map(tileView => tileView.container()))
     this.#container.addChild(this.#createAxesContainer())
 
-    const frame = (function () {
-      let minX = +Infinity
-      let maxX = -Infinity
-      let minY = +Infinity
-      let maxY = -Infinity
-      tileViews.forEach(function (tileView) {
-        const tileFrame = tileView.frameAbs()
-
-        minX = Math.min(minX, tileFrame.point1().x())
-        maxX = Math.max(maxX, tileFrame.point1().x() + tileFrame.width())
-        minY = Math.min(minY, tileFrame.point1().y())
-        maxY = Math.max(maxY, tileFrame.point1().y() + tileFrame.height())
-      })
-      const point1 = Point.create({ x: minX, y: minY })
-      const point2 = Point.create({ x: maxX, y: maxY })
-      return Frame.create({ point1, point2 })
-    })()
-
+    const frame = this.#calculateFrame()
     this.#container.position.set(-frame.point1().x(), -frame.point1().y())
   }
 
-  container () { return this.#container }
+ container () { return this.#container }
 
-  setPosition (position) {
-    this.container().position.set(position.x(), position.y())
+  /**
+   * Calculates the smallest frame which contains all tile's frames in board's local space.
+   */
+  #calculateFrame() {
+    const points = []
+    this.#tileViews.forEach(function (tileView) {
+      const frame = tileView.frameAbs()
+      points.push(frame.point1(), frame.point2())
+    })
+    return Frame.calculateContainingFrame(...points)
   }
 
   #createTileViews () {
@@ -87,7 +77,7 @@ export class BoardView {
   }
 
   /**
-   * For debugging.
+   * Creates a graphics object which draws axes for debugging.
    */
   #createAxesContainer () {
     const container = new Container()
