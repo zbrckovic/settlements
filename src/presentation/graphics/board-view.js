@@ -1,7 +1,7 @@
 import { Container, Graphics } from 'pixi.js'
 import { Frame, Point } from './geometry'
 import { tileRoofHeight, tileSide, tileWidth } from './rendering-const'
-import { createTileViewFactory } from './tile-view'
+import { TileView } from './tile-view'
 
 export class BoardView {
   static create (props) {
@@ -21,7 +21,6 @@ export class BoardView {
 
     this.#container = new Container()
 
-    this.#tileViewFactory = createTileViewFactory({ plane, assets })
     const tileViews = this.#createTileViews()
 
     this.#container.addChild(...tileViews.map(tileView => tileView.container()))
@@ -58,7 +57,7 @@ export class BoardView {
     const result = []
 
     this.#board.tiles().forEach((tile) => {
-      const tileView = this.#tileViewFactory.createTileView(tile)
+      const tileView = TileView.create({ tile, plane: this.#plane, assets: this.#assets })
       const tilePosition = this.#calculateTilePosition(tile)
       tileView.setPosition(tilePosition)
       result.push(tileView)

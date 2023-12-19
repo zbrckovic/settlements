@@ -4,38 +4,32 @@ import { addPointsToGraphics } from '../../pixi-utils'
 import { calculateRegularPolygonPoints, Frame, Point } from './geometry'
 import { tileSide } from './rendering-const'
 
-const hexRotation = Math.PI / 6
-const hexCenter = Point.create({ x: 0, y: 0 })
+// Every hexagon is rotated by 30deg so the vertex points downwards.
+const HEX_ROTATION = Math.PI / 6
+const HEX_CENTER = Point.create({ x: 0, y: 0 })
 
-export function createTileViewFactory ({ plane, assets }) {
-  const hexPoints = calculateRegularPolygonPoints(hexCenter, tileSide, 6, hexRotation)
-    .map(p => plane.project(p))
-
-  return {
-    createTileView (tile) {
-      return new TileView({ plane, tile, hexPoints, assets })
-    }
+export class TileView {
+  static create(props) {
+    return new TileView(props)
   }
-}
 
-class TileView {
   #plane
   #tile
   #hexPoints
   #assets
   #container
 
-  constructor ({ plane, tile, hexPoints, assets }) {
+  constructor ({ plane, tile, assets }) {
     this.#plane = plane
     this.#tile = tile
-    this.#hexPoints = hexPoints
+    this.#hexPoints = this.#calculateHexPoints()
     this.#assets = assets
     this.#container = new Container()
 
     this.container().addChild(this.#createHexGraphics())
 
     const sprite = new Sprite(this.#assets.hex)
-    sprite.rotation = hexRotation
+    sprite.rotation = HEX_ROTATION
     sprite.scale.set(0.15, 0.15)
     sprite.anchor.set(0.5, 0.5)
 
@@ -44,7 +38,12 @@ class TileView {
     spriteContainer.skew.set(Math.PI / 2 - this.#plane.angleBetweenAxes(), 0)
     spriteContainer.rotation = this.#plane.tiltAngle()
 
-    // container.addChild(spriteContainer)
+    this.container().addChild(spriteContainer)
+  }
+
+  #calculateHexPoints () {
+    return calculateRegularPolygonPoints(HEX_CENTER, tileSide, 6, HEX_ROTATION)
+      .map(p => this.#plane.project(p))
   }
 
   frame () {
