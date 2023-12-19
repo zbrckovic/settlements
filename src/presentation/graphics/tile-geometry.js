@@ -29,7 +29,7 @@ export class TileGeometry {
   constructor ({ plane }) {
     this.#plane = plane
     this.#hexPoints = this.#calculateHexPoints()
-    this.#frame = this.#calculateFrame()
+    this.#frame = Frame.calculateContainingFrame(...this.#hexPoints)
   }
 
   plane () { return this.#plane }
@@ -45,22 +45,5 @@ export class TileGeometry {
       6,
       TileGeometry.HEX_ROTATION
     ).map(p => this.#plane.project(p))
-  }
-
-  #calculateFrame () {
-    let minX = +Infinity
-    let maxX = -Infinity
-    let minY = +Infinity
-    let maxY = -Infinity
-
-    this.#hexPoints.forEach(function (point) {
-      minX = Math.min(minX, point.x())
-      maxX = Math.max(maxX, point.x())
-      minY = Math.min(minY, point.y())
-      maxY = Math.max(maxY, point.y())
-    })
-    const point1 = Point.create({ x: minX, y: minY })
-    const point2 = Point.create({ x: maxX, y: maxY })
-    return Frame.create({ point1, point2 })
   }
 }
