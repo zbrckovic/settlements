@@ -8,10 +8,17 @@ export class BoardView {
     return new BoardView(props)
   }
 
+
+  /**
+   * Game model object.
+   */
+  #board
   #plane
   #assets
-  #board
   #tileViews
+  /**
+   * PixiJS display object containing the board's graphics.
+   */
   #container
 
   constructor ({ plane, assets, board }) {
