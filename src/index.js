@@ -1,8 +1,8 @@
 import '@pixi/graphics-extras'
 import { Application, Container } from 'pixi.js'
 import './assets'
-import { createAssetsLibrary } from './assets'
-import { createPlane, createBoardView } from './presentation/graphics'
+import { AssetsLibrary } from './assets'
+import { BoardView, Plane } from './presentation/graphics'
 import { createBoard } from './game/board'
 import { createTile, TileType } from './game/tile'
 import { createCoords } from './game/misc'
@@ -14,14 +14,14 @@ const angleBetweenAxes = Math.PI - Math.PI / 3
 const tiltAngle = Math.PI / 6
 
 const startApp = async () => {
-  const assetsLibrary = await createAssetsLibrary()
-  const boardScreenBundle = await assetsLibrary.loadBoardScreenBundle()
+  await AssetsLibrary.init()
+  const boardScreenBundle = await AssetsLibrary.loadBoardScreenBundle()
 
   const app = new Application({ width: WIDTH, height: HEIGHT, antialias: true })
   globalThis.__PIXI_APP__ = app
   document.body.appendChild(app.view)
 
-  const plane = createPlane({ angleBetweenAxes, tiltAngle })
+  const plane = Plane.create({ angleBetweenAxes, tiltAngle })
   const board = createBoard({
     tiles: [
       createTile({ type: TileType.Mountains, coords: createCoords({ x: 0, y: 0 }) }),
@@ -103,9 +103,8 @@ const startApp = async () => {
   }
 
   const boardContainer = new Container()
-  const boardView = createBoardView({ plane, assets: boardScreenBundle, board })
+  const boardView = BoardView.create({ plane, assets: boardScreenBundle, board })
   boardContainer.addChild(boardView.container())
-  boardContainer.position.set(10, 10)
 
   app.stage.addChild(boardContainer)
 }

@@ -1,34 +1,51 @@
-import { createPoint } from './point'
+import { Point } from './point'
 
-/**
- * @param angleBetweenAxes - Angle between x-axis and y-axis.
- * @param tiltAngle - Angle between horizontal line and x-axis (how much to tilt the x-axis
- * upwards).
- */
-export const createPlane = ({ angleBetweenAxes = Math.PI / 2, tiltAngle = 0 }) => {
-  const that = ({
-    angleBetweenAxes () { return angleBetweenAxes },
-    tiltAngle () { return tiltAngle },
-    project (vector) {
-      return createPoint({
-        x: myXToX(vector.x()) + myYToX(vector.y()),
-        y: myYToY(vector.y()) + myXToY(vector.x())
-      })
-    }
-  })
-  return that
+export class Plane {
+  static create (props) {
+    return new Plane(props)
+  }
+
+  #angleBetweenAxes
+  #tiltAngle
 
   /**
-   * Contribution to x.
+   * @param angleBetweenAxes - Angle between x-axis and y-axis.
+   * @param tiltAngle - Angle between horizontal line and x-axis (how much to tilt the x-axis
+   * upwards).
    */
-  function myXToX (myX) { return Math.cos(that.tiltAngle()) * myX }
+  constructor ({ angleBetweenAxes = Math.PI / 2, tiltAngle = 0 }) {
+    this.#angleBetweenAxes = angleBetweenAxes
+    this.#tiltAngle = tiltAngle
+  }
 
-  function myYToX (myY) { return Math.cos(that.tiltAngle() + that.angleBetweenAxes()) * myY }
+  angleBetweenAxes () { return this.#angleBetweenAxes }
+
+  tiltAngle () { return this.#tiltAngle }
+
+  project (vector) {
+    return Point.create({
+      x: this.#myXToX(vector.x()) + this.#myYToX(vector.y()),
+      y: this.#myYToY(vector.y()) + this.#myXToY(vector.x())
+    })
+  }
 
   /**
-   * Contribution to y.
+   * Contribution of x to x.
    */
-  function myXToY (myX) { return Math.sin(that.tiltAngle()) * myX }
+  #myXToX (myX) { return Math.cos(this.tiltAngle()) * myX }
 
-  function myYToY (myY) { return Math.sin(that.tiltAngle() + that.angleBetweenAxes()) * myY }
+  /**
+   * Contribution of y to x.
+   */
+  #myYToX (myY) { return Math.cos(this.tiltAngle() + this.angleBetweenAxes()) * myY }
+
+  /**
+   * Contribution of x to y.
+   */
+  #myXToY (myX) { return Math.sin(this.tiltAngle()) * myX }
+
+  /**
+   * Contribution of y to y.
+   */
+  #myYToY (myY) { return Math.sin(this.tiltAngle() + this.angleBetweenAxes()) * myY }
 }

@@ -1,4 +1,3 @@
-export { createPoint } from './point';
-export { createYInverter } from './misc';
-export { calculateRegularPolygonPoints } from './polygon';
-
+export { Point } from './point'
+export { Frame } from './frame'
+export { calculateRegularPolygonPoints } from './polygon'
