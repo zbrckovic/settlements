@@ -1,57 +1,66 @@
-/**
- * @param props.tiles
- */
-export function createBoard (props) {
-  const tiles = new Set(props.tiles)
+import { Coords } from './misc'
 
-  const that = {
-    tiles () { return tiles },
-    rotate () {
-      that.tiles().forEach(tile => {
-        const x = tile.coords().x()
-        const y = tile.coords().y()
-        tile.coords().setX(y)
-        tile.coords().setY(y - x)
-      })
-      normalize()
-    },
-    toString: function () {
-      const lookupMap = tileLookupMap()
-      const { x, y, width, height } = frame()
-
-      let result = ''
-      for (let row = y; row < y + height; row++) {
-        for (let col = x; col < x + width; col++) {
-          const tile = lookupMap.get(row)?.get(col)
-          result += tile ? tile.abbreviation() : '_'
-        }
-        result += '\n'
-      }
-      return result
-    },
-    state: function () {
-      const state = new Set()
-      tiles.forEach(tile => state.add(tile.state()))
-      return state
-    }
+export class Board {
+  static create (props) {
+    return new Board(props)
   }
 
-  return that
+  #tiles
+
+  constructor ({ tiles }) {
+    this.#tiles = tiles
+  }
+
+  tiles () { return this.#tiles }
+
+  rotate () {
+    this.tiles().forEach(tile => {
+      const x = tile.coords().x()
+      const y = tile.coords().y()
+      // noinspection JSSuspiciousNameCombination
+      tile.setCoords(Coords.create({ x: y, y: y - x }))
+    })
+    this.#normalize()
+  }
+
+  toString () {
+    const lookupMap = this.#tileLookupMap()
+    const { x, y, width, height } = this.#frame()
+
+    let result = ''
+    for (let row = y; row < y + height; row++) {
+      for (let col = x; col < x + width; col++) {
+        const tile = lookupMap.get(row)?.get(col)
+        result += tile ? tile.abbreviation() : '_'
+      }
+      result += '\n'
+    }
+    return result
+  }
+
+  /**
+   * POJO for equality comparison in tests.
+   */
+  state () {
+    const state = new Set()
+    this.tiles().forEach(tile => state.add(tile.state()))
+    return state
+  }
 
   /**
    * Translates coordinates of all tiles so that the board is fully in the positive quadrant and
    * there are no continuous gaps between axes and the board.
    */
-  function normalize () {
-    const { x, y } = frame()
-    translate(-x, -y)
+  #normalize () {
+    const { x, y } = this.#frame()
+    this.#translate(-x, -y)
   }
 
   /**
-   * Calculates the smallest rectangle which contains all the tiles (used for normalization).
+   * Calculates the smallest rectangle which contains all the tiles.
    */
-  function frame () {
-    if (tiles.size === 0) {
+  #frame () {
+    if (this.tiles().size === 0) {
       return { x: 0, y: 0, width: 0, height: 0 }
     }
 
@@ -60,7 +69,7 @@ export function createBoard (props) {
     let minY = +Infinity
     let maxY = -Infinity
 
-    tiles.forEach(function (tile) {
+    this.tiles().forEach(tile => {
       const coords = tile.coords()
       minX = Math.min(minX, coords.x())
       minY = Math.min(minY, coords.y())
@@ -77,20 +86,22 @@ export function createBoard (props) {
   /**
    * Translates all tiles by given values.
    */
-  function translate (x = 0, y = 0) {
-    tiles.forEach(function (tile) {
-      tile.coords().setX(tile.coords().x() + x)
-      tile.coords().setY(tile.coords().y() + y)
+  #translate (x = 0, y = 0) {
+    this.tiles().forEach(tile => {
+      tile.setCoords(Coords.create({
+        x: tile.coords().x() + x,
+        y: tile.coords().y() + y
+      }))
     })
   }
 
   /**
    * Creates a map of tiles by their coordinates.
    */
-  function tileLookupMap () {
+  #tileLookupMap () {
     const map = new Map()
 
-    tiles.forEach(tile => {
+    this.tiles().forEach(tile => {
       const coords = tile.coords()
       const row = map.get(coords.y()) ?? new Map()
       row.set(coords.x(), tile)

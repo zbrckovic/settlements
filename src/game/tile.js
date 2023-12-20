@@ -7,33 +7,43 @@ export const TileType = {
   Desert: 'Desert'
 }
 
-/**
- * @param type
- * @param coords
- */
-export function createTile ({ type, coords }) {
-  const that = {
-    type () { return type },
-    coords () { return coords },
-    abbreviation () {
-      switch (that.type()) {
-        case TileType.Pasture:
-          return 'P'
-        case TileType.Forest:
-          return 'F'
-        case TileType.Fields:
-          return 'f'
-        case TileType.Hills:
-          return 'H'
-        case TileType.Mountains:
-          return 'M'
-        case TileType.Desert:
-          return 'D'
-      }
-    },
-    state () {
-      return [that.type(), that.coords().state()]
+export class Tile {
+  static create (props) {
+    return new Tile(props)
+  }
+
+  #type
+  #coords
+
+  constructor ({ type, coords }) {
+    this.#type = type
+    this.#coords = coords
+  }
+
+  type () { return this.#type }
+
+  coords () { return this.#coords }
+
+  setCoords (coords) { this.#coords = coords }
+
+  abbreviation () {
+    switch (this.type()) {
+      case TileType.Pasture:
+        return 'P'
+      case TileType.Forest:
+        return 'F'
+      case TileType.Fields:
+        return 'f'
+      case TileType.Hills:
+        return 'H'
+      case TileType.Mountains:
+        return 'M'
+      case TileType.Desert:
+        return 'D'
     }
   }
-  return that
+
+  state () {
+    return [this.type(), this.coords().state()]
+  }
 }

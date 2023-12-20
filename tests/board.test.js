@@ -1,66 +1,66 @@
-import { createBoard } from '../src/game/board'
-import { createCoords } from '../src/game/misc'
-import { createTile, TileType } from '../src/game/tile'
+import { Board } from '../src/game/board'
+import { Coords } from '../src/game/misc'
+import { Tile, TileType } from '../src/game/tile'
 
 describe('board', () => {
   let testBoard
 
   beforeEach(() => {
-    testBoard = createBoard({
+    testBoard = Board.create({
       tiles: [
-        createTile({ type: TileType.Mountains, coords: createCoords({ x: 0, y: 0 }) }),
-        createTile({ type: TileType.Pasture, coords: createCoords({ x: 1, y: 0 }) }),
-        createTile({ type: TileType.Forest, coords: createCoords({ x: 2, y: 0 }) }),
+        Tile.create({ type: TileType.Mountains, coords: Coords.create({ x: 0, y: 0 }) }),
+        Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 1, y: 0 }) }),
+        Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 2, y: 0 }) }),
 
-        createTile({ type: TileType.Fields, coords: createCoords({ x: 0, y: 1 }) }),
-        createTile({ type: TileType.Hills, coords: createCoords({ x: 1, y: 1 }) }),
-        createTile({ type: TileType.Pasture, coords: createCoords({ x: 2, y: 1 }) }),
-        createTile({ type: TileType.Hills, coords: createCoords({ x: 3, y: 1 }) }),
+        Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 0, y: 1 }) }),
+        Tile.create({ type: TileType.Hills, coords: Coords.create({ x: 1, y: 1 }) }),
+        Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 2, y: 1 }) }),
+        Tile.create({ type: TileType.Hills, coords: Coords.create({ x: 3, y: 1 }) }),
 
-        createTile({ type: TileType.Fields, coords: createCoords({ x: 0, y: 2 }) }),
-        createTile({ type: TileType.Forest, coords: createCoords({ x: 1, y: 2 }) }),
-        createTile({ type: TileType.Desert, coords: createCoords({ x: 2, y: 2 }) }),
-        createTile({ type: TileType.Forest, coords: createCoords({ x: 3, y: 2 }) }),
-        createTile({ type: TileType.Mountains, coords: createCoords({ x: 4, y: 2 }) }),
+        Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 0, y: 2 }) }),
+        Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 1, y: 2 }) }),
+        Tile.create({ type: TileType.Desert, coords: Coords.create({ x: 2, y: 2 }) }),
+        Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 3, y: 2 }) }),
+        Tile.create({ type: TileType.Mountains, coords: Coords.create({ x: 4, y: 2 }) }),
 
-        createTile({ type: TileType.Forest, coords: createCoords({ x: 1, y: 3 }) }),
-        createTile({ type: TileType.Mountains, coords: createCoords({ x: 2, y: 3 }) }),
-        createTile({ type: TileType.Fields, coords: createCoords({ x: 3, y: 3 }) }),
-        createTile({ type: TileType.Pasture, coords: createCoords({ x: 4, y: 3 }) }),
+        Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 1, y: 3 }) }),
+        Tile.create({ type: TileType.Mountains, coords: Coords.create({ x: 2, y: 3 }) }),
+        Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 3, y: 3 }) }),
+        Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 4, y: 3 }) }),
 
-        createTile({ type: TileType.Hills, coords: createCoords({ x: 2, y: 4 }) }),
-        createTile({ type: TileType.Fields, coords: createCoords({ x: 3, y: 4 }) }),
-        createTile({ type: TileType.Pasture, coords: createCoords({ x: 4, y: 4 }) }),
+        Tile.create({ type: TileType.Hills, coords: Coords.create({ x: 2, y: 4 }) }),
+        Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 3, y: 4 }) }),
+        Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 4, y: 4 }) }),
       ]
     })
   })
 
   test('rotate', () => {
-    const expectedBoard = createBoard({
+    const expectedBoard = Board.create({
       tiles: [
-        createTile({ type: TileType.Forest, coords: createCoords({ x: 0, y: 0 }) }),
-        createTile({ type: TileType.Hills, coords: createCoords({ x: 1, y: 0 }) }),
-        createTile({ type: TileType.Mountains, coords: createCoords({ x: 2, y: 0 }) }),
+        Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 0, y: 0 }) }),
+        Tile.create({ type: TileType.Hills, coords: Coords.create({ x: 1, y: 0 }) }),
+        Tile.create({ type: TileType.Mountains, coords: Coords.create({ x: 2, y: 0 }) }),
 
-        createTile({ type: TileType.Pasture, coords: createCoords({ x: 0, y: 1 }) }),
-        createTile({ type: TileType.Pasture, coords: createCoords({ x: 1, y: 1 }) }),
-        createTile({ type: TileType.Forest, coords: createCoords({ x: 2, y: 1 }) }),
-        createTile({ type: TileType.Pasture, coords: createCoords({ x: 3, y: 1 }) }),
+        Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 0, y: 1 }) }),
+        Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 1, y: 1 }) }),
+        Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 2, y: 1 }) }),
+        Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 3, y: 1 }) }),
 
-        createTile({ type: TileType.Mountains, coords: createCoords({ x: 0, y: 2 }) }),
-        createTile({ type: TileType.Hills, coords: createCoords({ x: 1, y: 2 }) }),
-        createTile({ type: TileType.Desert, coords: createCoords({ x: 2, y: 2 }) }),
-        createTile({ type: TileType.Fields, coords: createCoords({ x: 3, y: 2 }) }),
-        createTile({ type: TileType.Pasture, coords: createCoords({ x: 4, y: 2 }) }),
+        Tile.create({ type: TileType.Mountains, coords: Coords.create({ x: 0, y: 2 }) }),
+        Tile.create({ type: TileType.Hills, coords: Coords.create({ x: 1, y: 2 }) }),
+        Tile.create({ type: TileType.Desert, coords: Coords.create({ x: 2, y: 2 }) }),
+        Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 3, y: 2 }) }),
+        Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 4, y: 2 }) }),
 
-        createTile({ type: TileType.Fields, coords: createCoords({ x: 1, y: 3 }) }),
-        createTile({ type: TileType.Forest, coords: createCoords({ x: 2, y: 3 }) }),
-        createTile({ type: TileType.Mountains, coords: createCoords({ x: 3, y: 3 }) }),
-        createTile({ type: TileType.Fields, coords: createCoords({ x: 4, y: 3 }) }),
+        Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 1, y: 3 }) }),
+        Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 2, y: 3 }) }),
+        Tile.create({ type: TileType.Mountains, coords: Coords.create({ x: 3, y: 3 }) }),
+        Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 4, y: 3 }) }),
 
-        createTile({ type: TileType.Fields, coords: createCoords({ x: 2, y: 4 }) }),
-        createTile({ type: TileType.Forest, coords: createCoords({ x: 3, y: 4 }) }),
-        createTile({ type: TileType.Hills, coords: createCoords({ x: 4, y: 4 }) }),
+        Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 2, y: 4 }) }),
+        Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 3, y: 4 }) }),
+        Tile.create({ type: TileType.Hills, coords: Coords.create({ x: 4, y: 4 }) }),
       ]
     })
 
