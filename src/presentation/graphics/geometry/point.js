@@ -1,11 +1,13 @@
 export class Point {
-  #x
-  #y
-
-  static create ({ x, y }) {
+  /** @see constructor */
+  static from ({ x, y }) {
     return new Point({ x, y })
   }
 
+  #x
+  #y
+
+  /** @private */
   constructor ({ x, y }) {
     this.#x = x
     this.#y = y
@@ -15,9 +17,9 @@ export class Point {
 
   y () { return this.#y }
 
-  withX (x) { return Point.create({ x, y: this.y() }) }
+  withX (x) { return Point.from({ x, y: this.y() }) }
 
-  withY (y) { return Point.create({ x: this.x(), y }) }
+  withY (y) { return Point.from({ x: this.x(), y }) }
 
   distanceTo (other) {
     const hDistance = other.x() - this.x()
@@ -35,16 +37,16 @@ export class Point {
     const newX = pivot.x() + radius * Math.cos(slant + angle)
     const newY = pivot.y() + radius * Math.sin(slant + angle)
 
-    return Point.create({ x: newX, y: newY })
+    return Point.from({ x: newX, y: newY })
   }
 
   map (mapper) { return mapper(this) }
 
-  withMappedX (mapper) { return Point.create({ x: mapper(this.x()), y: this.y() }) }
+  withMappedX (mapper) { return Point.from({ x: mapper(this.x()), y: this.y() }) }
 
-  withMappedY (mapper) { return Point.create({ x: this.x(), y: mapper(this.y()) }) }
+  withMappedY (mapper) { return Point.from({ x: this.x(), y: mapper(this.y()) }) }
 
-  withAddition (other) { return Point.create({ x: this.x() + other.x(), y: this.y() + other.y() }) }
+  withAddition (other) { return Point.from({ x: this.x() + other.x(), y: this.y() + other.y() }) }
 
-  withMultiplication (factor) { return Point.create({ x: this.x() * factor, y: this.y() * factor })}
+  withMultiplication (factor) { return Point.from({ x: this.x() * factor, y: this.y() * factor })}
 }

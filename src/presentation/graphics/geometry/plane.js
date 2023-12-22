@@ -1,7 +1,8 @@
 import { Point } from './point'
 
 export class Plane {
-  static create (props) {
+  /** @see constructor */
+  static from (props) {
     return new Plane(props)
   }
 
@@ -9,6 +10,7 @@ export class Plane {
   #tiltAngle
 
   /**
+   * @private
    * @param angleBetweenAxes - Angle between x-axis and y-axis.
    * @param tiltAngle - Angle between horizontal line and x-axis (how much to tilt the x-axis
    * upwards).
@@ -23,7 +25,7 @@ export class Plane {
   tiltAngle () { return this.#tiltAngle }
 
   project (vector) {
-    return Point.create({
+    return Point.from({
       x: this.#myXToX(vector.x()) + this.#myYToX(vector.y()),
       y: this.#myYToY(vector.y()) + this.#myXToY(vector.x())
     })

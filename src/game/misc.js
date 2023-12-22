@@ -2,7 +2,8 @@
  * Used to identify the position of a tile on the board.
  */
 export class Coords {
-  static create (props) {
+  /** @see constructor */
+  static from (props) {
     return new Coords(props)
   }
 
@@ -10,6 +11,8 @@ export class Coords {
   #y
 
   /**
+   * @private
+   *
    * @param {number} x Column index which in non-isometric view increases in the right
    * direction.
    * @param {number} y Row index which in non-isometric view increases in the down-left
@@ -24,9 +27,17 @@ export class Coords {
 
   y () { return this.#y }
 
-  withX (x) { return Coords.create({ x, y: this.y() }) }
+  compare (other) {
+    if (this.x() > other.x()) return -1
+    if (this.x() < other.x()) return 1
+    if (this.y() > other.y()) return -1
+    if (this.y() < other.y()) return 1
+    return 0
+  }
 
-  withY (y) { return Coords.create({ x: this.x(), y }) }
+  toString () {
+    return `${this.x()},${this.y()}`
+  }
 
-  state () { return [this.x(), this.y()] }
+  plain () { return [this.x(), this.y()] }
 }

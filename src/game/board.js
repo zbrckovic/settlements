@@ -1,14 +1,21 @@
 import { Coords } from './misc'
+import { Tile } from './tile'
 
 export class Board {
-  static create (props) {
+  /** @see constructor */
+  static from (props) {
     return new Board(props)
+  }
+
+  static fromPlain ({ tiles: tilesPlain }) {
+    return this.from({ tiles: tilesPlain.map(t => Tile.fromPlain(t)) })
   }
 
   #tiles
 
+  /** @private */
   constructor ({ tiles }) {
-    this.#tiles = tiles
+    this.#tiles = new Set(tiles)
   }
 
   tiles () { return this.#tiles }
@@ -18,7 +25,7 @@ export class Board {
       const x = tile.coords().x()
       const y = tile.coords().y()
       // noinspection JSSuspiciousNameCombination
-      tile.setCoords(Coords.create({ x: y, y: y - x }))
+      tile.setCoords(Coords.from({ x: y, y: y - x }))
     })
     this.#normalize()
   }
@@ -39,12 +46,12 @@ export class Board {
   }
 
   /**
-   * POJO for equality comparison in tests.
+   * Plain object for equality comparison in tests.
    */
-  state () {
-    const state = new Set()
-    this.tiles().forEach(tile => state.add(tile.state()))
-    return state
+  plain () {
+    const result = Array.from(this.tiles().values())
+    result.sort((a, b) => a.compare(b))
+    return result.map(t => t.plain())
   }
 
   /**
@@ -88,7 +95,7 @@ export class Board {
    */
   #translate (x = 0, y = 0) {
     this.tiles().forEach(tile => {
-      tile.setCoords(Coords.create({
+      tile.setCoords(Coords.from({
         x: tile.coords().x() + x,
         y: tile.coords().y() + y
       }))

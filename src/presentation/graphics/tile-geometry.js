@@ -4,7 +4,8 @@ import { tileSide } from './rendering-const'
 export class TileGeometry {
   static #memo = new WeakMap()
 
-  static create ({ plane }) {
+  /** @see constructor */
+  static from ({ plane }) {
     const memoized = this.#memo.get(plane)
     if (memoized !== undefined) return memoized
     const newInstance = new TileGeometry({ plane })
@@ -16,7 +17,7 @@ export class TileGeometry {
   static HEX_ROTATION = Math.PI / 6
 
   // The center of the hexagon is the origin of tile container's coordinate system.
-  static HEX_CENTER = Point.create({ x: 0, y: 0 })
+  static HEX_CENTER = Point.from({ x: 0, y: 0 })
 
   #plane
   /**

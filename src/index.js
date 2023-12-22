@@ -21,32 +21,32 @@ const startApp = async () => {
   globalThis.__PIXI_APP__ = app
   document.body.appendChild(app.view)
 
-  const plane = Plane.create({ angleBetweenAxes, tiltAngle })
-  const board = Board.create({
+  const plane = Plane.from({ angleBetweenAxes, tiltAngle })
+  const board = Board.from({
     tiles: [
-      Tile.create({ type: TileType.Mountains, coords: Coords.create({ x: 0, y: 0 }) }),
-      Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 1, y: 0 }) }),
-      Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 2, y: 0 }) }),
+      Tile.from({ type: TileType.Mountains, coords: Coords.from({ x: 0, y: 0 }) }),
+      Tile.from({ type: TileType.Pasture, coords: Coords.from({ x: 1, y: 0 }) }),
+      Tile.from({ type: TileType.Forest, coords: Coords.from({ x: 2, y: 0 }) }),
 
-      Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 0, y: 1 }) }),
-      Tile.create({ type: TileType.Hills, coords: Coords.create({ x: 1, y: 1 }) }),
-      Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 2, y: 1 }) }),
-      Tile.create({ type: TileType.Hills, coords: Coords.create({ x: 3, y: 1 }) }),
+      Tile.from({ type: TileType.Fields, coords: Coords.from({ x: 0, y: 1 }) }),
+      Tile.from({ type: TileType.Hills, coords: Coords.from({ x: 1, y: 1 }) }),
+      Tile.from({ type: TileType.Pasture, coords: Coords.from({ x: 2, y: 1 }) }),
+      Tile.from({ type: TileType.Hills, coords: Coords.from({ x: 3, y: 1 }) }),
 
-      Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 0, y: 2 }) }),
-      Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 1, y: 2 }) }),
-      Tile.create({ type: TileType.Desert, coords: Coords.create({ x: 2, y: 2 }) }),
-      Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 3, y: 2 }) }),
-      Tile.create({ type: TileType.Mountains, coords: Coords.create({ x: 4, y: 2 }) }),
+      Tile.from({ type: TileType.Fields, coords: Coords.from({ x: 0, y: 2 }) }),
+      Tile.from({ type: TileType.Forest, coords: Coords.from({ x: 1, y: 2 }) }),
+      Tile.from({ type: TileType.Desert, coords: Coords.from({ x: 2, y: 2 }) }),
+      Tile.from({ type: TileType.Forest, coords: Coords.from({ x: 3, y: 2 }) }),
+      Tile.from({ type: TileType.Mountains, coords: Coords.from({ x: 4, y: 2 }) }),
 
-      Tile.create({ type: TileType.Forest, coords: Coords.create({ x: 1, y: 3 }) }),
-      Tile.create({ type: TileType.Mountains, coords: Coords.create({ x: 2, y: 3 }) }),
-      Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 3, y: 3 }) }),
-      Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 4, y: 3 }) }),
+      Tile.from({ type: TileType.Forest, coords: Coords.from({ x: 1, y: 3 }) }),
+      Tile.from({ type: TileType.Mountains, coords: Coords.from({ x: 2, y: 3 }) }),
+      Tile.from({ type: TileType.Fields, coords: Coords.from({ x: 3, y: 3 }) }),
+      Tile.from({ type: TileType.Pasture, coords: Coords.from({ x: 4, y: 3 }) }),
 
-      Tile.create({ type: TileType.Hills, coords: Coords.create({ x: 2, y: 4 }) }),
-      Tile.create({ type: TileType.Fields, coords: Coords.create({ x: 3, y: 4 }) }),
-      Tile.create({ type: TileType.Pasture, coords: Coords.create({ x: 4, y: 4 }) }),
+      Tile.from({ type: TileType.Hills, coords: Coords.from({ x: 2, y: 4 }) }),
+      Tile.from({ type: TileType.Fields, coords: Coords.from({ x: 3, y: 4 }) }),
+      Tile.from({ type: TileType.Pasture, coords: Coords.from({ x: 4, y: 4 }) }),
     ]
   })
 
@@ -60,9 +60,9 @@ const startApp = async () => {
       do
         temp = Math.floor(Math.random() * 5)
       while (fields[temp] === 0 && fields.some(item => item !== 0))
-      tiles[tiles.length] = Tile.create({
+      tiles[tiles.length] = Tile.from({
         type: resolveTyle(temp),
-        coords: Coords.create({ x: j, y: i })
+        coords: Coords.from({ x: j, y: i })
       })
       fields[temp] = fields[temp]--
     }
@@ -104,7 +104,7 @@ const startApp = async () => {
   }
 
   const boardContainer = new Container()
-  const boardView = BoardView.create({ plane, assets: boardScreenBundle, board })
+  const boardView = BoardView.from({ plane, assets: boardScreenBundle, board })
   boardContainer.addChild(boardView.container())
 
   app.stage.addChild(boardContainer)

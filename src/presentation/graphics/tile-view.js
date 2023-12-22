@@ -5,7 +5,8 @@ import { Point } from './geometry'
 import { TileGeometry } from './tile-geometry'
 
 export class TileView {
-  static create (props) {
+  /** @see constructor */
+  static from (props) {
     return new TileView(props)
   }
 
@@ -20,10 +21,11 @@ export class TileView {
    */
   #container
 
+  /** @private */
   constructor ({ tile, plane, assets }) {
     this.#tile = tile
     this.#assets = assets
-    this.#geometry = TileGeometry.create({ plane })
+    this.#geometry = TileGeometry.from({ plane })
     this.#container = new Container()
 
     this.container().addChild(this.#createHexGraphics())
@@ -53,7 +55,7 @@ export class TileView {
    * Like frame(), but in parent's coordinate space.
    */
   frameAbs () {
-    const position = Point.create(this.container().position)
+    const position = Point.from(this.container().position)
     return this.frame().withPoint1(this.frame().point1().withAddition(position))
   }
 

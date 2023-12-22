@@ -1,3 +1,5 @@
+import { Coords } from './misc'
+
 export const TileType = {
   Pasture: 'Pasture',
   Forest: 'Forest',
@@ -8,13 +10,20 @@ export const TileType = {
 }
 
 export class Tile {
-  static create (props) {
+  /** @see constructor */
+  static from (props) {
     return new Tile(props)
+  }
+
+
+  static fromPlain({ type, coords }) {
+    return this.from({ type, coords: Coords.from(coords) })
   }
 
   #type
   #coords
 
+  /** @private */
   constructor ({ type, coords }) {
     this.#type = type
     this.#coords = coords
@@ -43,7 +52,11 @@ export class Tile {
     }
   }
 
-  state () {
-    return [this.type(), this.coords().state()]
+  compare(other) {
+    return this.coords().compare(other.coords())
+  }
+
+  plain () {
+    return [this.type(), this.coords().plain()]
   }
 }

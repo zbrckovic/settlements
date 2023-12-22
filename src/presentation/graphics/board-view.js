@@ -4,7 +4,8 @@ import { tileRoofHeight, tileSide, tileWidth } from './rendering-const'
 import { TileView } from './tile-view'
 
 export class BoardView {
-  static create (props) {
+  /** @see constructor */
+  static from (props) {
     return new BoardView(props)
   }
 
@@ -20,6 +21,7 @@ export class BoardView {
    */
   #container
 
+  /** @private */
   constructor ({ plane, assets, board }) {
     this.#plane = plane
     this.#assets = assets
@@ -54,7 +56,7 @@ export class BoardView {
     const result = []
 
     this.#board.tiles().forEach((tile) => {
-      const tileView = TileView.create({ tile, plane: this.#plane, assets: this.#assets })
+      const tileView = TileView.from({ tile, plane: this.#plane, assets: this.#assets })
       const tilePosition = this.#calculateTilePosition(tile)
       tileView.setPosition(tilePosition)
       result.push(tileView)
@@ -65,15 +67,15 @@ export class BoardView {
 
   #calculateTilePosition (tile) {
     // How much to move the tile to position it in the next row of the same column.
-    const tileVerticalOffset = Point.create({ x: -tileWidth / 2, y: 2 * tileSide - tileRoofHeight })
+    const tileVerticalOffset = Point.from({ x: -tileWidth / 2, y: 2 * tileSide - tileRoofHeight })
       .map(p => this.#plane.project(p))
 
     // How much to move the tile to the right to position it the next column of the same row.
     const tileHorizontalOffset = Point
-      .create({ x: tileWidth, y: 0 })
+      .from({ x: tileWidth, y: 0 })
       .map(p => this.#plane.project(p))
 
-    const zeroTilePosition = Point.create({ x: 0, y: 0 })
+    const zeroTilePosition = Point.from({ x: 0, y: 0 })
     const coords = tile.coords()
     const rowIndex = coords.y()
     const colIndex = coords.x()
@@ -92,8 +94,8 @@ export class BoardView {
     const thickness = 2
     const axisLength = 1000
 
-    const xDestination = Point.create({ x: axisLength, y: 0 }).map(p => this.#plane.project(p))
-    const yDestination = Point.create({ x: 0, y: axisLength }).map(p => this.#plane.project(p))
+    const xDestination = Point.from({ x: axisLength, y: 0 }).map(p => this.#plane.project(p))
+    const yDestination = Point.from({ x: 0, y: axisLength }).map(p => this.#plane.project(p))
 
     this.container().addChild(new Graphics()
       .lineStyle(thickness, 0xff0000)
