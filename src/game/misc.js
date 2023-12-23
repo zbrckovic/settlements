@@ -39,3 +39,21 @@ export class Coords {
 
   plain () { return [this.x(), this.y()] }
 }
+
+export const VerticeDirection = {
+  UP: 'UP',
+  UP_RIGHT: 'UP_RIGHT',
+  DOWN_RIGHT: 'DOWN_RIGHT',
+  DOWN: 'DOWN',
+  DOWN_LEFT: 'DOWN_LEFT',
+  UP_LEFT: 'UP_LEFT',
+}
+
+export const EdgeDirection = {
+  UP_RIGHT: 'UP_RIGHT',
+  DOWN_RIGHT: 'DOWN_RIGHT',
+  RIGHT: 'RIGHT',
+  DOWN_LEFT: 'DOWN_LEFT',
+  LEFT: 'LEFT',
+  UP_LEFT: 'UP_LEFT',
+}

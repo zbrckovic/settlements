@@ -1,8 +1,9 @@
 import { TileType } from '../../game/tile'
-import { Container, Graphics, Sprite } from 'pixi.js'
+import { Container, Graphics, Sprite, Text } from 'pixi.js'
 import { addPointsToGraphics } from '../../pixi-utils'
 import { Point } from './geometry'
 import { TileGeometry } from './tile-geometry'
+import { VerticeDirection } from '../../game/misc'
 
 export class TileView {
   /** @see constructor */
@@ -29,6 +30,7 @@ export class TileView {
     this.#container = new Container()
 
     this.container().addChild(this.#createHexGraphics())
+    // this.container().addChild(this.#createVertexGraphics())
 
     const sprite = new Sprite(this.#assets.hex)
     sprite.rotation = TileGeometry.HEX_ROTATION
@@ -58,6 +60,10 @@ export class TileView {
     return this.frame().withTranslation(Point.from(this.container().position))
   }
 
+  hexPoints () {
+    return this.#geometry.hexPoints()
+  }
+
   container () { return this.#container }
 
   /**
@@ -75,6 +81,23 @@ export class TileView {
     const color = this.#calculateTileColor()
     const graphics = new Graphics().beginFill(color)
     return addPointsToGraphics(graphics, this.#geometry.hexPoints())
+  }
+
+  #createVertexGraphics () {
+    const container = new Container()
+
+    if (this.#tile.type() === TileType.Desert) {
+
+      Object.values(VerticeDirection).forEach(direction => {
+        const p = this.#geometry.getHexPoint(direction)
+        const text = new Text(direction)
+        text.anchor.set(0.5, 0.5)
+        text.position.set(p.x(), p.y())
+        container.addChild(text)
+      })
+    }
+
+    return container
   }
 
   #calculateTileColor () {

@@ -55,4 +55,8 @@ export class Point {
   compare (other) {
     return compareListsOfNumbers([this.x(), this.y()], [other.x(), other.y()])
   }
+
+  toString() {
+    return `${this.x()},${this.y()}`
+  }
 }
