@@ -1,10 +1,17 @@
 import { calculateRegularPolygonPoints, Frame, Point } from './geometry'
 import { tileSide } from './rendering-const'
 
+/**
+ * Represents the geometry of a tile regardless of the rendering system. It is a hexagon in the
+ * tile's local coordinate space (zero is at the center of the hexagon).
+ */
 export class TileGeometry {
   static #memo = new WeakMap()
 
-  /** @see constructor */
+  /**
+   * Every tile has the same geometry, so the result is memoized per plane.
+   * @see constructor
+   */
   static from ({ plane }) {
     const memoized = this.#memo.get(plane)
     if (memoized !== undefined) return memoized
@@ -27,6 +34,7 @@ export class TileGeometry {
   #hexPoints
   #frame
 
+  /** @private */
   constructor ({ plane }) {
     this.#plane = plane
     this.#hexPoints = this.#calculateHexPoints()
