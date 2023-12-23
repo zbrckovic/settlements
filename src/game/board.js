@@ -21,12 +21,17 @@ export class Board {
   tiles () { return this.#tiles }
 
   rotate () {
+    const newTiles = new Set()
+
     this.tiles().forEach(tile => {
       const x = tile.coords().x()
       const y = tile.coords().y()
       // noinspection JSSuspiciousNameCombination
-      tile.setCoords(Coords.from({ x: y, y: y - x }))
+      const newTile = tile.withCoords(Coords.from({ x: y, y: y - x }))
+      newTiles.add(newTile)
     })
+    this.#tiles = newTiles
+
     this.#normalize()
   }
 
@@ -94,12 +99,15 @@ export class Board {
    * Translates all tiles by given values.
    */
   #translate (x = 0, y = 0) {
+    const newTiles = new Set()
     this.tiles().forEach(tile => {
-      tile.setCoords(Coords.from({
+      const newTile = tile.withCoords(Coords.from({
         x: tile.coords().x() + x,
         y: tile.coords().y() + y
       }))
+      newTiles.add(newTile)
     })
+    this.#tiles = newTiles
   }
 
   /**

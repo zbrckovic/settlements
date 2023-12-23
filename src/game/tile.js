@@ -32,7 +32,9 @@ export class Tile {
 
   coords () { return this.#coords }
 
-  setCoords (coords) { this.#coords = coords }
+  withCoords(coords) {
+    return Tile.from({ type: this.type(), coords })
+  }
 
   abbreviation () {
     switch (this.type()) {
