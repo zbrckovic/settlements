@@ -1,6 +1,6 @@
 import { calculateRegularPolygonPoints, Frame, Point } from './geometry'
 import { tileSide } from './rendering-const'
-import { VerticeDirection } from '../../game/misc'
+import { VertexDirection } from '../../game/misc'
 
 /**
  * Represents the geometry of a tile regardless of the rendering system. It is a hexagon in the
@@ -48,7 +48,7 @@ export class TileGeometry {
   frame () { return this.#frame }
 
   getHexPoint(direction) {
-    const i = verticeDirectionToIndex[direction]
+    const i = vertexDirectionToIndex[direction]
     return this.hexPoints()[i]
   }
 
@@ -62,11 +62,11 @@ export class TileGeometry {
   }
 }
 
-const verticeDirectionToIndex = {
-  [VerticeDirection.UP]: 4,
-  [VerticeDirection.UP_RIGHT]: 5,
-  [VerticeDirection.DOWN_RIGHT]: 0,
-  [VerticeDirection.DOWN]: 1,
-  [VerticeDirection.DOWN_LEFT]: 2,
-  [VerticeDirection.UP_LEFT]: 3
+const vertexDirectionToIndex = {
+  [VertexDirection.UP]: 4,
+  [VertexDirection.UP_RIGHT]: 5,
+  [VertexDirection.DOWN_RIGHT]: 0,
+  [VertexDirection.DOWN]: 1,
+  [VertexDirection.DOWN_LEFT]: 2,
+  [VertexDirection.UP_LEFT]: 3
 }

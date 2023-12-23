@@ -15,8 +15,7 @@ export class Tile {
     return new Tile(props)
   }
 
-
-  static fromPlain({ type, coords }) {
+  static fromPlain ({ type, coords }) {
     return this.from({ type, coords: Coords.from(coords) })
   }
 
@@ -52,7 +51,7 @@ export class Tile {
     }
   }
 
-  compare(other) {
+  compare (other) {
     return this.coords().compare(other.coords())
   }
 

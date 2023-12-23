@@ -3,7 +3,7 @@ import { Container, Graphics, Sprite, Text } from 'pixi.js'
 import { addPointsToGraphics } from '../../pixi-utils'
 import { Point } from './geometry'
 import { TileGeometry } from './tile-geometry'
-import { VerticeDirection } from '../../game/misc'
+import { VertexDirection } from '../../game/misc'
 
 export class TileView {
   /** @see constructor */
@@ -88,7 +88,7 @@ export class TileView {
 
     if (this.#tile.type() === TileType.Desert) {
 
-      Object.values(VerticeDirection).forEach(direction => {
+      Object.values(VertexDirection).forEach(direction => {
         const p = this.#geometry.getHexPoint(direction)
         const text = new Text(direction)
         text.anchor.set(0.5, 0.5)

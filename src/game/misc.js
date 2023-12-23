@@ -33,14 +33,14 @@ export class Coords {
     return compareListsOfNumbers(this.plain(), other.plain())
   }
 
+  plain () { return [this.x(), this.y()] }
+
   toString () {
     return `${this.x()},${this.y()}`
   }
-
-  plain () { return [this.x(), this.y()] }
 }
 
-export const VerticeDirection = {
+export const VertexDirection = {
   UP: 'UP',
   UP_RIGHT: 'UP_RIGHT',
   DOWN_RIGHT: 'DOWN_RIGHT',
