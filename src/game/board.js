@@ -15,7 +15,7 @@ export class Board {
 
   /** @private */
   constructor ({ tiles }) {
-    this.#tiles = this.#tileLookupMap(tiles)
+    this.#tiles = Board.#createTileLookupMap(tiles)
   }
 
   tiles () { return Object.values(this.#tiles) }
@@ -36,14 +36,13 @@ export class Board {
   }
 
   toString () {
-    const lookupMap = this.#tileLookupMap()
     const { x, y, width, height } = this.#frame()
 
     let result = ''
     for (let row = y; row < y + height; row++) {
       for (let col = x; col < x + width; col++) {
         const coords = Coords.from({ x: col, y: row })
-        const tile = lookupMap[coords.id()]
+        const tile = this.#tiles[coords.id()]
         result += tile ? tile.abbreviation() : '_'
       }
       result += '\n'
@@ -114,7 +113,7 @@ export class Board {
   /**
    * Creates a map of tiles by their coordinates.
    */
-  #tileLookupMap (tiles) {
+  static #createTileLookupMap (tiles) {
     const map = {}
 
     tiles.forEach(tile => {
