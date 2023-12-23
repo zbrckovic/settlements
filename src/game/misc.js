@@ -38,6 +38,10 @@ export class Coords {
   toString () {
     return `${this.x()},${this.y()}`
   }
+
+  id () {
+    return this.toString()
+  }
 }
 
 export const VertexDirection = {

@@ -32,7 +32,7 @@ export class Tile {
 
   coords () { return this.#coords }
 
-  withCoords(coords) {
+  withCoords (coords) {
     return Tile.from({ type: this.type(), coords })
   }
 
@@ -59,5 +59,9 @@ export class Tile {
 
   plain () {
     return [this.type(), this.coords().plain()]
+  }
+
+  id () {
+    return this.coords().id()
   }
 }

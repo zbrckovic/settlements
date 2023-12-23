@@ -42,7 +42,8 @@ export class Board {
     let result = ''
     for (let row = y; row < y + height; row++) {
       for (let col = x; col < x + width; col++) {
-        const tile = lookupMap.get(row)?.get(col)
+        const coords = Coords.from({ x: col, y: row })
+        const tile = lookupMap[coords.id()]
         result += tile ? tile.abbreviation() : '_'
       }
       result += '\n'
@@ -114,13 +115,10 @@ export class Board {
    * Creates a map of tiles by their coordinates.
    */
   #tileLookupMap () {
-    const map = new Map()
+    const map = {}
 
     this.tiles().forEach(tile => {
-      const coords = tile.coords()
-      const row = map.get(coords.y()) ?? new Map()
-      row.set(coords.x(), tile)
-      map.set(coords.y(), row)
+      map[tile.id()] = tile
     })
 
     return map
