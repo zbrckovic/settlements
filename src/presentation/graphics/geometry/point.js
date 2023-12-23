@@ -1,3 +1,5 @@
+import { compareListsOfNumbers } from '../../../utils'
+
 export class Point {
   /** @see constructor */
   static from ({ x, y }) {
@@ -51,10 +53,6 @@ export class Point {
   withMultiplication (factor) { return Point.from({ x: this.x() * factor, y: this.y() * factor })}
 
   compare (other) {
-    if (this.x() > other.x()) return -1
-    if (this.x() < other.x()) return 1
-    if (this.y() > other.y()) return -1
-    if (this.y() < other.y()) return 1
-    return 0
+    return compareListsOfNumbers([this.x(), this.y()], [other.x(), other.y()])
   }
 }

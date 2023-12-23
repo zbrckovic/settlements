@@ -33,8 +33,8 @@ export class Frame {
   /**
    * @private
    * A rectangle defined by two points.
-   * @param {Object} point1 - The point with smallest x and y.
-   * @param {Object} point2 - The point with largest x and y.
+   * @param {Object} point1 - The smaller point according to Point#compare.
+   * @param {Object} point2 - The larger point according to Point#compare.
    */
   constructor ({ point1, point2 }) {
     this.#point1 = point1
@@ -48,14 +48,6 @@ export class Frame {
   width () { return this.point2().x() - this.point1().x() }
 
   height () { return this.point2().y() - this.point1().y() }
-
-  withPoint1 (point1) {
-    return Frame.from({ point1, point2: this.point2() })
-  }
-
-  withPoint2 (point2) {
-    return Frame.from({ point1: this.point1(), point2 })
-  }
 
   withTranslation (point) {
     const point1 = this.point1().withAddition(point)

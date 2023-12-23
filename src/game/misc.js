@@ -1,3 +1,5 @@
+import { compareListsOfNumbers } from '../utils'
+
 /**
  * Used to identify the position of a tile on the board.
  */
@@ -28,11 +30,7 @@ export class Coords {
   y () { return this.#y }
 
   compare (other) {
-    if (this.x() > other.x()) return -1
-    if (this.x() < other.x()) return 1
-    if (this.y() > other.y()) return -1
-    if (this.y() < other.y()) return 1
-    return 0
+    return compareListsOfNumbers(this.plain(), other.plain())
   }
 
   toString () {
