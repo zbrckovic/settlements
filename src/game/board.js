@@ -15,20 +15,20 @@ export class Board {
 
   /** @private */
   constructor ({ tiles }) {
-    this.#tiles = new Set(tiles)
+    this.#tiles = this.#tileLookupMap(tiles)
   }
 
-  tiles () { return this.#tiles }
+  tiles () { return Object.values(this.#tiles) }
 
   rotate () {
-    const newTiles = new Set()
+    const newTiles = {}
 
     this.tiles().forEach(tile => {
       const x = tile.coords().x()
       const y = tile.coords().y()
       // noinspection JSSuspiciousNameCombination
       const newTile = tile.withCoords(Coords.from({ x: y, y: y - x }))
-      newTiles.add(newTile)
+      newTiles[newTile.id()] = newTile
     })
     this.#tiles = newTiles
 
@@ -55,7 +55,7 @@ export class Board {
    * Plain object for equality comparison in tests.
    */
   plain () {
-    const result = Array.from(this.tiles().values())
+    const result = Array.from(this.tiles())
     result.sort((a, b) => a.compare(b))
     return result.map(t => t.plain())
   }
@@ -73,7 +73,7 @@ export class Board {
    * Calculates the smallest rectangle which contains all the tiles.
    */
   #frame () {
-    if (this.tiles().size === 0) {
+    if (this.tiles().length === 0) {
       return { x: 0, y: 0, width: 0, height: 0 }
     }
 
@@ -100,13 +100,13 @@ export class Board {
    * Translates all tiles by given values.
    */
   #translate (x = 0, y = 0) {
-    const newTiles = new Set()
+    const newTiles = {}
     this.tiles().forEach(tile => {
       const newTile = tile.withCoords(Coords.from({
         x: tile.coords().x() + x,
         y: tile.coords().y() + y
       }))
-      newTiles.add(newTile)
+      newTiles[newTile.id()] = newTile
     })
     this.#tiles = newTiles
   }
@@ -114,10 +114,10 @@ export class Board {
   /**
    * Creates a map of tiles by their coordinates.
    */
-  #tileLookupMap () {
+  #tileLookupMap (tiles) {
     const map = {}
 
-    this.tiles().forEach(tile => {
+    tiles.forEach(tile => {
       map[tile.id()] = tile
     })
 
