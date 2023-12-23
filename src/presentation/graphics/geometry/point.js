@@ -49,4 +49,12 @@ export class Point {
   withAddition (other) { return Point.from({ x: this.x() + other.x(), y: this.y() + other.y() }) }
 
   withMultiplication (factor) { return Point.from({ x: this.x() * factor, y: this.y() * factor })}
+
+  compare (other) {
+    if (this.x() > other.x()) return -1
+    if (this.x() < other.x()) return 1
+    if (this.y() > other.y()) return -1
+    if (this.y() < other.y()) return 1
+    return 0
+  }
 }

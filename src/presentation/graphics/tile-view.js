@@ -54,18 +54,8 @@ export class TileView {
   /**
    * Like frame(), but in parent's coordinate space.
    */
-  frameAbs () {
-    return this.frame()
-      .withPoint1(this.toParentCoords(this.frame().point1()))
-      .withPoint2(this.toParentCoords(this.frame().point2()))
-  }
-
-  /**
-   * Transforms point from tile's local coordinate space to parent's coordinate space.
-   */
-  toParentCoords (point) {
-    const position = Point.from(this.container().position)
-    return point.withAddition(position)
+  frameInParentSpace () {
+    return this.frame().withTranslation(Point.from(this.container().position))
   }
 
   container () { return this.#container }

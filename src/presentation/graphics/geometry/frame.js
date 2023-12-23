@@ -2,9 +2,9 @@ import { Point } from './point'
 
 export class Frame {
   /**
-   * Calculates the smallest frame which contains all points.
+   * Calculates the smallest frame which contains all the points.
    */
-  static calculateContainingFrame(...points) {
+  static calculateContainingFrame (...points) {
     if (points.length === 0) throw new Error('points not provided')
 
     let minX = +Infinity
@@ -55,5 +55,11 @@ export class Frame {
 
   withPoint2 (point2) {
     return Frame.from({ point1: this.point1(), point2 })
+  }
+
+  withTranslation (point) {
+    const point1 = this.point1().withAddition(point)
+    const point2 = this.point2().withAddition(point)
+    return Frame.from({ point1, point2 })
   }
 }

@@ -23,13 +23,12 @@ export class TileGeometry {
   // Every hexagon is rotated by 30deg so one of its vertices points downwards.
   static HEX_ROTATION = Math.PI / 6
 
-  // The center of the hexagon is the origin of tile container's coordinate system.
+  // The center of the hexagon is the origin of the tile container's coordinate system.
   static HEX_CENTER = Point.from({ x: 0, y: 0 })
 
   #plane
   /**
-   * Vertices of tile's hexagon in tile's local coordinate space. This is actually the same for
-   * every tile.
+   * Vertices of tile's hexagon in tile's local coordinate space. This is the same for every tile.
    */
   #hexPoints
   #frame

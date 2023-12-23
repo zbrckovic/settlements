@@ -46,7 +46,7 @@ export class BoardView {
   #calculateFrame() {
     const points = []
     this.#tileViews.forEach(function (tileView) {
-      const frame = tileView.frameAbs()
+      const frame = tileView.frameInParentSpace()
       points.push(frame.point1(), frame.point2())
     })
     return Frame.calculateContainingFrame(...points)
