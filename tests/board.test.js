@@ -61,13 +61,10 @@ describe('board', () => {
         { type: TileType.Forest, coords: { x: 3, y: 4 } },
         { type: TileType.Hills, coords: { x: 4, y: 4 } },
       ]
-    })
+    }).plain()
 
-    const rotatedBoard = testBoard.withRotation()
+    const rotatedBoard = testBoard.withRotation().plain()
 
-    const actual = rotatedBoard.plain()
-    const expected = expectedBoard.plain()
-
-    expect(actual).toEqual(expected)
+    expect(rotatedBoard).toEqual(expectedBoard)
   })
 })
