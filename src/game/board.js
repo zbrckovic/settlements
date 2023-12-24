@@ -32,7 +32,7 @@ export class Board {
       return tile.withCoords(Coords.from({ x: y, y: y - x }))
     })
 
-    return Board.#normalize(Object.values(newTiles))
+    return Board.#normalize(newTiles)
   }
 
   toString () {
