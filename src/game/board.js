@@ -13,30 +13,30 @@ export class Board {
 
   #tilesById
 
-  /** @private */
+  /**
+   * @private
+   * @param props
+   * @param props.tiles - The list of tiles.
+   */
   constructor ({ tiles }) {
     this.#initTiles(tiles)
   }
 
   tiles () { return Object.values(this.#tilesById) }
 
-  rotate () {
-    const newTiles = {}
-
-    this.tiles().forEach(tile => {
+  withRotation () {
+    const newTiles = this.tiles().map(tile => {
       const x = tile.coords().x()
       const y = tile.coords().y()
       // noinspection JSSuspiciousNameCombination
-      const newTile = tile.withCoords(Coords.from({ x: y, y: y - x }))
-      newTiles[newTile.id()] = newTile
+      return tile.withCoords(Coords.from({ x: y, y: y - x }))
     })
-    this.#tilesById = newTiles
 
-    this.#normalize()
+    return Board.#normalize(Object.values(newTiles))
   }
 
   toString () {
-    const { x, y, width, height } = this.#frame()
+    const { x, y, width, height } = Board.#frame(this.tiles())
 
     let result = ''
     for (let row = y; row < y + height; row++) {
@@ -63,16 +63,17 @@ export class Board {
    * Translates coordinates of all tiles so that the board is fully in the positive quadrant and
    * there are no continuous gaps between axes and the board.
    */
-  #normalize () {
-    const { x, y } = this.#frame()
-    this.#translate(-x, -y)
+  static #normalize (tiles) {
+    const { x, y } = Board.#frame(tiles)
+    const newTiles = Board.#translate(tiles, -x, -y)
+    return Board.from({ tiles: newTiles })
   }
 
   /**
    * Calculates the smallest rectangle which contains all the tiles.
    */
-  #frame () {
-    if (this.tiles().length === 0) {
+  static #frame (tiles) {
+    if (tiles.length === 0) {
       return { x: 0, y: 0, width: 0, height: 0 }
     }
 
@@ -81,7 +82,7 @@ export class Board {
     let minY = +Infinity
     let maxY = -Infinity
 
-    this.tiles().forEach(tile => {
+    tiles.forEach(tile => {
       const coords = tile.coords()
       minX = Math.min(minX, coords.x())
       minY = Math.min(minY, coords.y())
@@ -98,16 +99,13 @@ export class Board {
   /**
    * Translates all tiles by given values.
    */
-  #translate (x = 0, y = 0) {
-    const newTiles = {}
-    this.tiles().forEach(tile => {
-      const newTile = tile.withCoords(Coords.from({
+  static #translate (tiles, x = 0, y = 0) {
+    return tiles.map(tile => {
+      return tile.withCoords(Coords.from({
         x: tile.coords().x() + x,
         y: tile.coords().y() + y
       }))
-      newTiles[newTile.id()] = newTile
     })
-    this.#tilesById = newTiles
   }
 
   /**

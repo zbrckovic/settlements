@@ -63,9 +63,9 @@ describe('board', () => {
       ]
     })
 
-    testBoard.rotate()
+    const rotatedBoard = testBoard.withRotation()
 
-    const actual = testBoard.plain()
+    const actual = rotatedBoard.plain()
     const expected = expectedBoard.plain()
 
     expect(actual).toEqual(expected)
