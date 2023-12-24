@@ -11,14 +11,14 @@ export class Board {
     return this.from({ tiles: tilesPlain.map(t => Tile.fromPlain(t)) })
   }
 
-  #tiles
+  #tilesById
 
   /** @private */
   constructor ({ tiles }) {
-    this.#tiles = Board.#createTileLookupMap(tiles)
+    this.#initTiles(tiles)
   }
 
-  tiles () { return Object.values(this.#tiles) }
+  tiles () { return Object.values(this.#tilesById) }
 
   rotate () {
     const newTiles = {}
@@ -30,7 +30,7 @@ export class Board {
       const newTile = tile.withCoords(Coords.from({ x: y, y: y - x }))
       newTiles[newTile.id()] = newTile
     })
-    this.#tiles = newTiles
+    this.#tilesById = newTiles
 
     this.#normalize()
   }
@@ -42,7 +42,7 @@ export class Board {
     for (let row = y; row < y + height; row++) {
       for (let col = x; col < x + width; col++) {
         const coords = Coords.from({ x: col, y: row })
-        const tile = this.#tiles[coords.id()]
+        const tile = this.#tilesById[coords.id()]
         result += tile ? tile.abbreviation() : '_'
       }
       result += '\n'
@@ -107,19 +107,17 @@ export class Board {
       }))
       newTiles[newTile.id()] = newTile
     })
-    this.#tiles = newTiles
+    this.#tilesById = newTiles
   }
 
   /**
    * Creates a map of tiles by their coordinates.
    */
-  static #createTileLookupMap (tiles) {
-    const map = {}
+  #initTiles (tiles) {
+    this.#tilesById = {}
 
     tiles.forEach(tile => {
-      map[tile.id()] = tile
+      this.#tilesById[tile.id()] = tile
     })
-
-    return map
   }
 }
