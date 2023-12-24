@@ -34,7 +34,7 @@ export class Board {
   tiles () { return Object.values(this.#tilesById) }
 
   withRotation () {
-    const repositionedTiles = Board.#repositionTilesForRotation(this.tiles())
+    const repositionedTiles = Board.#repositionAndRotateTilesForRotation(this.tiles())
     return Board.#normalizeTiles(repositionedTiles)
   }
 
@@ -62,12 +62,12 @@ export class Board {
     return result.map(t => t.plain())
   }
 
-  static #repositionTilesForRotation(tiles) {
+  static #repositionAndRotateTilesForRotation(tiles) {
     return tiles.map(tile => {
       const x = tile.coords().x()
       const y = tile.coords().y()
       // noinspection JSSuspiciousNameCombination
-      return tile.withCoords(Coords.from({ x: y, y: y - x }))
+      return tile.withCoords(Coords.from({ x: y, y: y - x })).withRotation()
     })
   }
 

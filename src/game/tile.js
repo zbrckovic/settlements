@@ -1,4 +1,6 @@
 import { Coords } from './misc'
+import { Settlement } from './settlement'
+import { Road } from './road'
 
 export const TileType = {
   Pasture: 'Pasture',
@@ -15,37 +17,64 @@ export class Tile {
     return new Tile(props)
   }
 
-  static fromPlain ({ type, coords }) {
-    return this.from({ type, coords: Coords.from(coords) })
+  static fromPlain ({
+    type,
+    coords: coordsPlain,
+    settlements: settlementsPlain = {},
+    roads: roadsPlain = {}
+  }) {
+    const coords = Coords.from(coordsPlain)
+
+    const settlements = {}
+    Object.values(SettlementKey).forEach(key => {
+      settlements[key] = settlementsPlain[key]
+        ? Settlement.fromPlain(settlementsPlain[key])
+        : undefined
+    })
+
+    const roads = {}
+    Object.values(RoadKey).forEach(key => {
+      roads[key] = roadsPlain[key]
+        ? Road.fromPlain(roadsPlain[key])
+        : undefined
+    })
+
+    return this.from({ type, coords, settlements, roads })
   }
 
   #type
   #coords
-  #edges = {}
-  #vertices = {}
+  #settlements
+  #roads
 
   /** @private */
-  constructor ({ type, coords }) {
+  constructor ({ type, coords, settlements = {}, roads = {} }) {
     this.#type = type
     this.#coords = coords
-    Object.values(TileEdgeKey).forEach(key => {
-      this.#edges[key] = undefined
-    })
-    Object.values(TileVertexKey).forEach(key => {
-      this.#vertices[key] = undefined
-    })
+    this.#settlements = settlements
+    this.#roads = roads
   }
 
   type () { return this.#type }
 
   coords () { return this.#coords }
 
-  edge(key) { return this.#edges[key] }
-
-  vertex(key) { return this.#vertices[key] }
-
   withCoords (coords) {
-    return Tile.from({ type: this.type(), coords })
+    return Tile.from({
+      type: this.type(),
+      coords,
+      settlements: this.#settlements,
+      roads: this.#roads
+    })
+  }
+
+  withRotation () {
+    return Tile.from({
+      type: this.type(),
+      coords: this.coords(),
+      settlements: Tile.#repositionSettlementsForRotation(this.#settlements),
+      roads: Tile.#repositionRoadsForRotation(this.#roads)
+    })
   }
 
   abbreviation () {
@@ -70,28 +99,63 @@ export class Tile {
   }
 
   plain () {
-    return [this.type(), this.coords().plain()]
+    return {
+      type: this.type(),
+      coords: this.coords().plain(),
+      settlements: Object.fromEntries(
+        Object
+          .entries(this.#settlements)
+          .map(([key, settlement]) => [key, settlement?.plain()])
+      ),
+      roads: Object.fromEntries(
+        Object
+          .entries(this.#roads)
+          .map(([key, road]) => [key, road?.plain()])
+      )
+    }
   }
 
   id () {
     return this.coords().id()
   }
+
+  static #repositionSettlementsForRotation (settlements) {
+    const keys = Object.values(SettlementKey)
+    const shiftedKeys = [...keys.slice(1), keys[0]]
+
+    const result = {}
+    Object.values(keys).forEach((key, i) => {
+      result[shiftedKeys[i]] = settlements[key]
+    })
+    return result
+  }
+
+  static #repositionRoadsForRotation (roads) {
+    const keys = Object.values(RoadKey)
+    const shiftedKeys = [...keys.slice(1), keys[0]]
+
+    const result = {}
+    Object.values(keys).forEach((key, i) => {
+      result[shiftedKeys[i]] = roads[key]
+    })
+    return result
+  }
 }
 
-const TileEdgeKey = {
-  X: 'X', // +X (right)
-  XY: 'XY', // +X, +Y (right, down)
-  mXY: 'mXY', // -X, +Y (left, down)
-  mX: 'mX', // -X (left)
-  mXmY: 'mXmY', // -X, -Y (left, up)
-  XmY: 'XmY', // +X, -Y (right, up)
-}
-
-const TileVertexKey = {
+export const SettlementKey = {
   mY: 'mY', // -Y (up)
-  XmY: 'XmY', // +X, -Y (right, up)
-  XY: 'XY', // +X, +Y (right, down)
-  Y: 'Y', // +Y (down)
-  mXY: 'mXY', // -X, +Y (left, down)
   mXmY: 'mXmY', // -X, -Y (left, up)
+  mXY: 'mXY', // -X, +Y (left, down)
+  Y: 'Y', // +Y (down)
+  XY: 'XY', // +X, +Y (right, down)
+  XmY: 'XmY', // +X, -Y (right, up)
+}
+
+export const RoadKey = {
+  X: 'X', // +X (right)
+  XmY: 'XmY', // +X, -Y (right, up)
+  mXmY: 'mXmY', // -X, -Y (left, up)
+  mX: 'mX', // -X (left)
+  mXY: 'mXY', // -X, +Y (left, down)
+  XY: 'XY', // +X, +Y (right, down)
 }
