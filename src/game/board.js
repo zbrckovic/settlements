@@ -16,27 +16,30 @@ export class Board {
   /**
    * @private
    * @param props
-   * @param props.tiles - The list of tiles.
+   * @param {Tile[]} props.tiles
    */
   constructor ({ tiles }) {
-    this.#initTiles(tiles)
+    this.#initTilesById(tiles)
+  }
+
+  /** Creates a map of tiles by their ids. */
+  #initTilesById (tiles) {
+    this.#tilesById = {}
+
+    tiles.forEach(tile => {
+      this.#tilesById[tile.id()] = tile
+    })
   }
 
   tiles () { return Object.values(this.#tilesById) }
 
   withRotation () {
-    const newTiles = this.tiles().map(tile => {
-      const x = tile.coords().x()
-      const y = tile.coords().y()
-      // noinspection JSSuspiciousNameCombination
-      return tile.withCoords(Coords.from({ x: y, y: y - x }))
-    })
-
-    return Board.#normalize(newTiles)
+    const repositionedTiles = Board.#repositionTilesForRotation(this.tiles())
+    return Board.#normalizeTiles(repositionedTiles)
   }
 
   toString () {
-    const { x, y, width, height } = Board.#frame(this.tiles())
+    const { x, y, width, height } = Board.#calculateFrame(this.tiles())
 
     let result = ''
     for (let row = y; row < y + height; row++) {
@@ -59,20 +62,29 @@ export class Board {
     return result.map(t => t.plain())
   }
 
+  static #repositionTilesForRotation(tiles) {
+    return tiles.map(tile => {
+      const x = tile.coords().x()
+      const y = tile.coords().y()
+      // noinspection JSSuspiciousNameCombination
+      return tile.withCoords(Coords.from({ x: y, y: y - x }))
+    })
+  }
+
   /**
    * Translates coordinates of all tiles so that the board is fully in the positive quadrant and
    * there are no continuous gaps between axes and the board.
    */
-  static #normalize (tiles) {
-    const { x, y } = Board.#frame(tiles)
-    const newTiles = Board.#translate(tiles, -x, -y)
+  static #normalizeTiles (tiles) {
+    const { x, y } = Board.#calculateFrame(tiles)
+    const newTiles = Board.#translateTiles(tiles, -x, -y)
     return Board.from({ tiles: newTiles })
   }
 
   /**
    * Calculates the smallest rectangle which contains all the tiles.
    */
-  static #frame (tiles) {
+  static #calculateFrame (tiles) {
     if (tiles.length === 0) {
       return { x: 0, y: 0, width: 0, height: 0 }
     }
@@ -99,23 +111,12 @@ export class Board {
   /**
    * Translates all tiles by given values.
    */
-  static #translate (tiles, x = 0, y = 0) {
+  static #translateTiles (tiles, x = 0, y = 0) {
     return tiles.map(tile => {
       return tile.withCoords(Coords.from({
         x: tile.coords().x() + x,
         y: tile.coords().y() + y
       }))
-    })
-  }
-
-  /**
-   * Creates a map of tiles by their coordinates.
-   */
-  #initTiles (tiles) {
-    this.#tilesById = {}
-
-    tiles.forEach(tile => {
-      this.#tilesById[tile.id()] = tile
     })
   }
 }
