@@ -35,6 +35,13 @@ export class Coords {
 
   plain () { return [this.x(), this.y()] }
 
+  withAddition (other) {
+    return Coords.from({
+      x: this.x() + other.x(),
+      y: this.y() + other.y()
+    })
+  }
+
   toString () {
     return `${this.x()},${this.y()}`
   }

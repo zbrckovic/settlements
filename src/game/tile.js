@@ -26,14 +26,14 @@ export class Tile {
     const coords = Coords.from(coordsPlain)
 
     const settlements = {}
-    Object.values(SettlementKey).forEach(key => {
+    Object.values(VertexKey).forEach(key => {
       settlements[key] = settlementsPlain[key]
         ? Settlement.fromPlain(settlementsPlain[key])
         : undefined
     })
 
     const roads = {}
-    Object.values(RoadKey).forEach(key => {
+    Object.values(EdgeKey).forEach(key => {
       roads[key] = roadsPlain[key]
         ? Road.fromPlain(roadsPlain[key])
         : undefined
@@ -120,7 +120,7 @@ export class Tile {
   }
 
   static #repositionSettlementsForRotation (settlements) {
-    const keys = Object.values(SettlementKey)
+    const keys = Object.values(VertexKey)
     const shiftedKeys = [...keys.slice(1), keys[0]]
 
     const result = {}
@@ -131,7 +131,7 @@ export class Tile {
   }
 
   static #repositionRoadsForRotation (roads) {
-    const keys = Object.values(RoadKey)
+    const keys = Object.values(EdgeKey)
     const shiftedKeys = [...keys.slice(1), keys[0]]
 
     const result = {}
@@ -142,7 +142,7 @@ export class Tile {
   }
 }
 
-export const SettlementKey = {
+export const VertexKey = {
   mY: 'mY', // -Y (up)
   mXmY: 'mXmY', // -X, -Y (left, up)
   mXY: 'mXY', // -X, +Y (left, down)
@@ -151,7 +151,7 @@ export const SettlementKey = {
   XmY: 'XmY', // +X, -Y (right, up)
 }
 
-export const RoadKey = {
+export const EdgeKey = {
   X: 'X', // +X (right)
   XmY: 'XmY', // +X, -Y (right, up)
   mXmY: 'mXmY', // -X, -Y (left, up)

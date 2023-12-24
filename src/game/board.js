@@ -1,5 +1,5 @@
 import { Coords } from './misc'
-import { Tile } from './tile'
+import { EdgeKey, Tile } from './tile'
 
 export class Board {
   /** @see constructor */
@@ -33,9 +33,35 @@ export class Board {
 
   tiles () { return Object.values(this.#tilesById) }
 
+  getTile (coords) {
+    return this.#tilesById[coords.id()]
+  }
+
   withRotation () {
     const repositionedTiles = Board.#repositionAndRotateTilesForRotation(this.tiles())
     return Board.#normalizeTiles(repositionedTiles)
+  }
+
+  getNeighbourTile (coords, edgeKey) {
+    const neighbourCoords = this.getNeighbourCoords(coords, edgeKey)
+    return this.#tilesById[neighbourCoords.id()]
+  }
+
+  getNeighbourCoords (coords, edgeKey) {
+    switch (edgeKey) {
+      case EdgeKey.X:
+        return coords.withAddition(Coords.from({ x: 1, y: 0 }))
+      case EdgeKey.XmY:
+        return coords.withAddition(Coords.from({ x: 1, y: -1 }))
+      case EdgeKey.mXmY:
+        return coords.withAddition(Coords.from({ x: -1, y: -1 }))
+      case EdgeKey.mX:
+        return coords.withAddition(Coords.from({ x: -1, y: 0 }))
+      case EdgeKey.mXY:
+        return coords.withAddition(Coords.from({ x: -1, y: 1 }))
+      case EdgeKey.XY:
+        return coords.withAddition(Coords.from({ x: 1, y: 1 }))
+    }
   }
 
   toString () {
@@ -62,7 +88,7 @@ export class Board {
     return result.map(t => t.plain())
   }
 
-  static #repositionAndRotateTilesForRotation(tiles) {
+  static #repositionAndRotateTilesForRotation (tiles) {
     return tiles.map(tile => {
       const x = tile.coords().x()
       const y = tile.coords().y()

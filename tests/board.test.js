@@ -1,5 +1,6 @@
 import { Board } from '../src/game/board'
-import { TileType } from '../src/game/tile'
+import { EdgeKey, TileType } from '../src/game/tile'
+import { Coords } from '../src/game/misc'
 
 describe('board', () => {
   let testBoard
@@ -66,5 +67,16 @@ describe('board', () => {
     const rotatedBoard = testBoard.withRotation().plain()
 
     expect(rotatedBoard).toEqual(expectedBoard)
+  })
+
+  test.each([
+    [Coords.from({ x: 0, y: 0 }), EdgeKey.X, Coords.from({ x: 1, y: 0 })],
+    [Coords.from({ x: 1, y: 0 }), EdgeKey.X, Coords.from({ x: 2, y: 0 })],
+    [Coords.from({ x: 0, y: 0 }), EdgeKey.mX, Coords.from({ x: -1, y: 0 })],
+    [Coords.from({ x: 0, y: 0 }), EdgeKey.XY, Coords.from({ x: 1, y: 1 })],
+  ])('getNeighbourCoords(%s, %s) returns %s', (coords, edgeKey, expectedCoords) => {
+    const actual = testBoard.getNeighbourTile(coords, edgeKey)
+    const expected = testBoard.getTile(expectedCoords)
+    expect(actual?.plain()).toEqual(expected?.plain())
   })
 })

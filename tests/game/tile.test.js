@@ -1,4 +1,4 @@
-import { Tile, RoadKey, TileType } from '../../src/game/tile'
+import { Tile, EdgeKey, TileType } from '../../src/game/tile'
 import { Coords, EdgeDirection } from '../../src/game/misc'
 
 describe('Tile', () => {
@@ -8,9 +8,9 @@ describe('Tile', () => {
         type: TileType.Forest,
         coords: Coords.from({ x: 0, y: 0 }),
         roads: {
-          [RoadKey.X]: Mock.from({ name: 'X' }),
-          [RoadKey.mXmY]: Mock.from({ name: 'mXmY' }),
-          [RoadKey.mXY]: Mock.from({ name: 'mXY' }),
+          [EdgeKey.X]: Mock.from({ name: 'X' }),
+          [EdgeKey.mXmY]: Mock.from({ name: 'mXmY' }),
+          [EdgeKey.mXY]: Mock.from({ name: 'mXY' }),
         }
       })
       .withRotation()
@@ -19,9 +19,9 @@ describe('Tile', () => {
       type: TileType.Forest,
       coords: Coords.from({ x: 0, y: 0 }),
       roads: {
-        [RoadKey.XmY]: Mock.from({ name: 'X' }),
-        [RoadKey.mX]: Mock.from({ name: 'mXmY' }),
-        [RoadKey.XY]: Mock.from({ name: 'mXY' }),
+        [EdgeKey.XmY]: Mock.from({ name: 'X' }),
+        [EdgeKey.mX]: Mock.from({ name: 'mXmY' }),
+        [EdgeKey.XY]: Mock.from({ name: 'mXY' }),
       }
     })
 
