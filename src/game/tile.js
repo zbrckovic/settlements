@@ -21,16 +21,28 @@ export class Tile {
 
   #type
   #coords
+  #edges = {}
+  #vertices = {}
 
   /** @private */
   constructor ({ type, coords }) {
     this.#type = type
     this.#coords = coords
+    Object.values(TileEdgeKey).forEach(key => {
+      this.#edges[key] = undefined
+    })
+    Object.values(TileVertexKey).forEach(key => {
+      this.#vertices[key] = undefined
+    })
   }
 
   type () { return this.#type }
 
   coords () { return this.#coords }
+
+  edge(key) { return this.#edges[key] }
+
+  vertex(key) { return this.#vertices[key] }
 
   withCoords (coords) {
     return Tile.from({ type: this.type(), coords })
@@ -64,4 +76,22 @@ export class Tile {
   id () {
     return this.coords().id()
   }
+}
+
+const TileEdgeKey = {
+  X: 'X', // +X (right)
+  XY: 'XY', // +X, +Y (right, down)
+  mXY: 'mXY', // -X, +Y (left, down)
+  mX: 'mX', // -X (left)
+  mXmY: 'mXmY', // -X, -Y (left, up)
+  XmY: 'XmY', // +X, -Y (right, up)
+}
+
+const TileVertexKey = {
+  mY: 'mY', // -Y (up)
+  XmY: 'XmY', // +X, -Y (right, up)
+  XY: 'XY', // +X, +Y (right, down)
+  Y: 'Y', // +Y (down)
+  mXY: 'mXY', // -X, +Y (left, down)
+  mXmY: 'mXmY', // -X, -Y (left, up)
 }
