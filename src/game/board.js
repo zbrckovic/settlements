@@ -1,7 +1,11 @@
 import { Coords } from './misc'
-import { EdgeKey, Tile } from './tile'
+import { EdgeKey, oppositeEdgeKeys, oppositeVertexKeys, Tile } from './tile'
+import { equals } from '../utils'
 
 export class Board {
+  static INCONSISTENT_ROADS_ERROR = 'INCONSISTENT_CODE_ERROR'
+  static INCONSISTENT_SETTLEMENTS_ERROR = 'INCONSISTENT_SETTLEMENTS_ERROR'
+
   /** @see constructor */
   static from (props) {
     return new Board(props)
@@ -20,6 +24,7 @@ export class Board {
    */
   constructor ({ tiles }) {
     this.#initTilesById(tiles)
+    this.#validateTiles()
   }
 
   /** Creates a map of tiles by their ids. */
@@ -28,6 +33,37 @@ export class Board {
 
     tiles.forEach(tile => {
       this.#tilesById[tile.id()] = tile
+    })
+  }
+
+  #validateTiles() {
+    const edgeKeys = Object.values(EdgeKey)
+
+    this.tiles().forEach(tile => {
+      const coords = tile.coords()
+
+      edgeKeys.forEach(edgeKey => {
+        const neighbourTile = this.getNeighbourTile(coords, edgeKey)
+        if (neighbourTile === undefined) return
+
+        // check roads
+        const oppositeEdgeKey = oppositeEdgeKeys[edgeKey]
+        const tileRoad = tile.getRoad(edgeKey)
+        const neighbourTileRoad = neighbourTile.getRoad(oppositeEdgeKey)
+        if (!equals(tileRoad, neighbourTileRoad)) {
+          throw new Error(Board.INCONSISTENT_ROADS_ERROR)
+        }
+
+        // check settlements
+        const vertexKeys = oppositeVertexKeys[edgeKey]
+        Object.entries(vertexKeys).forEach(([vertexKey, neighbourVertexKey]) => {
+          const settlement = tile.getSettlement(vertexKey)
+          const neighbourSettlement = neighbourTile.getSettlement(neighbourVertexKey)
+          if (!equals(settlement, neighbourSettlement)) {
+            throw new Error(Board.INCONSISTENT_SETTLEMENTS_ERROR)
+          }
+        })
+      })
     })
   }
 

@@ -59,6 +59,14 @@ export class Tile {
 
   coords () { return this.#coords }
 
+  getRoad (edgeKey) {
+    return this.#roads[edgeKey]
+  }
+
+  getSettlement (vertexKey) {
+    return this.#settlements[vertexKey]
+  }
+
   withCoords (coords) {
     return Tile.from({
       type: this.type(),
@@ -158,4 +166,41 @@ export const EdgeKey = {
   mX: 'mX', // -X (left)
   mXY: 'mXY', // -X, +Y (left, down)
   XY: 'XY', // +X, +Y (right, down)
+}
+
+export const oppositeEdgeKeys = {
+  [EdgeKey.X]: EdgeKey.mX,
+  [EdgeKey.XmY]: EdgeKey.mXY,
+  [EdgeKey.mXmY]: EdgeKey.XY,
+  [EdgeKey.mX]: EdgeKey.X,
+  [EdgeKey.mXY]: EdgeKey.XmY,
+  [EdgeKey.XY]: EdgeKey.mXmY
+}
+
+export const oppositeVertexKeys = {
+  [EdgeKey.X]: {
+    [VertexKey.XmY]: VertexKey.mXmY,
+    [VertexKey.XY]: VertexKey.mXY
+  },
+  [EdgeKey.XmY]: {
+    [VertexKey.XmY]: VertexKey.Y,
+    [VertexKey.mY]: VertexKey.mXY
+  },
+
+  [EdgeKey.mXmY]: {
+    [VertexKey.mY]: VertexKey.XY,
+    [VertexKey.XmY]: VertexKey.Y
+  },
+  [EdgeKey.mX]: {
+    [VertexKey.mXmY]: VertexKey.XmY,
+    [VertexKey.mXY]: VertexKey.XY
+  },
+  [EdgeKey.mXY]: {
+    [VertexKey.mXY]: VertexKey.mY,
+    [VertexKey.Y]: VertexKey.XmY
+  },
+  [EdgeKey.XY]: {
+    [VertexKey.Y]: VertexKey.mXmY,
+    [VertexKey.XY]: VertexKey.mY
+  }
 }

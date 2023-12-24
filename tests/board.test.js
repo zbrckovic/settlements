@@ -1,8 +1,11 @@
 import { Board } from '../src/game/board'
-import { EdgeKey, TileType } from '../src/game/tile'
+import { EdgeKey, Tile, TileType, VertexKey } from '../src/game/tile'
 import { Coords } from '../src/game/misc'
+import { PlayerToken } from '../src/game/player-token'
+import { Road } from '../src/game/road'
+import { Settlement } from '../src/game/settlement'
 
-describe('board', () => {
+describe('Board', () => {
   let testBoard
 
   beforeEach(() => {
@@ -78,5 +81,37 @@ describe('board', () => {
     const actual = testBoard.getNeighbourTile(coords, edgeKey)
     const expected = testBoard.getTile(expectedCoords)
     expect(actual?.plain()).toEqual(expected?.plain())
+  })
+
+  describe('constructor', () => {
+    test('throws for road inconsistency', () => {
+      const tile1 = Tile.from({
+        coords: Coords.from({ x: 0, y: 0 }),
+        roads: { [EdgeKey.X]: Road.from({ playerToken: PlayerToken.A }) }
+      })
+      const tile2 = Tile.from({
+        coords: Coords.from({ x: 1, y: 0 }),
+        roads: { [EdgeKey.mX]: Road.from({ playerToken: PlayerToken.B }) }
+      })
+
+      expect(() => {
+        Board.from({ tiles: [tile1, tile2] })
+      }).toThrow(Board.INCONSISTENT_ROADS_ERROR)
+    })
+
+    test('throws for settlement inconsistency', () => {
+      const tile1 = Tile.from({
+        coords: Coords.from({ x: 0, y: 0 }),
+        settlements: { [VertexKey.XY]: Settlement.village({ playerToken: PlayerToken.A }) }
+      })
+      const tile2 = Tile.from({
+        coords: Coords.from({ x: 1, y: 0 }),
+        settlements: { [VertexKey.mXY]: Settlement.village({ playerToken: PlayerToken.B }) }
+      })
+
+      expect(() => {
+        Board.from({ tiles: [tile1, tile2] })
+      }).toThrow(Board.INCONSISTENT_SETTLEMENTS_ERROR)
+    })
   })
 })

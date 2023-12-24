@@ -16,3 +16,8 @@ export function compareListsOfNumbers (list1, list2) {
 
   return 0
 }
+
+export function equals(equatable1, equatable2) {
+  if (equatable1 === undefined) return equatable2 === undefined
+  return equatable1.equals(equatable2)
+}

@@ -10,8 +10,8 @@ import { Coords } from './game/misc'
 const HEIGHT = 900
 const WIDTH = 1600
 
-const angleBetweenAxes = Math.PI - Math.PI / 3
-const tiltAngle = Math.PI / 6
+const angleBetweenAxes = undefined // Math.PI - Math.PI / 3
+const tiltAngle = undefined // Math.PI / 6
 
 const startApp = async () => {
   await AssetsLibrary.init()

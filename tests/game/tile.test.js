@@ -1,5 +1,7 @@
-import { Tile, EdgeKey, TileType } from '../../src/game/tile'
-import { Coords, EdgeDirection } from '../../src/game/misc'
+import { EdgeKey, Tile, TileType } from '../../src/game/tile'
+import { Coords } from '../../src/game/misc'
+import { Road } from '../../src/game/road'
+import { PlayerToken } from '../../src/game/player-token'
 
 describe('Tile', () => {
   test('withRotation()', () => {
@@ -8,9 +10,9 @@ describe('Tile', () => {
         type: TileType.Forest,
         coords: Coords.from({ x: 0, y: 0 }),
         roads: {
-          [EdgeKey.X]: Mock.from({ name: 'X' }),
-          [EdgeKey.mXmY]: Mock.from({ name: 'mXmY' }),
-          [EdgeKey.mXY]: Mock.from({ name: 'mXY' }),
+          [EdgeKey.X]: Road.from({ playerToken: PlayerToken.A }),
+          [EdgeKey.mXmY]: Road.from({ playerToken: PlayerToken.B }),
+          [EdgeKey.mXY]: Road.from({ playerToken: PlayerToken.C }),
         }
       })
       .withRotation()
@@ -19,26 +21,12 @@ describe('Tile', () => {
       type: TileType.Forest,
       coords: Coords.from({ x: 0, y: 0 }),
       roads: {
-        [EdgeKey.XmY]: Mock.from({ name: 'X' }),
-        [EdgeKey.mX]: Mock.from({ name: 'mXmY' }),
-        [EdgeKey.XY]: Mock.from({ name: 'mXY' }),
+        [EdgeKey.XmY]: Road.from({ playerToken: PlayerToken.A }),
+        [EdgeKey.mX]:  Road.from({ playerToken: PlayerToken.B }),
+        [EdgeKey.XY]: Road.from({ playerToken: PlayerToken.C }),
       }
     })
 
     expect(rotatedTile.plain()).toEqual(expectedTile.plain())
   })
-
-  class Mock {
-    static from ({ name }) {
-      return new Mock({ name })
-    }
-
-    constructor ({ name }) {
-      this.name = name
-    }
-
-    plain () {
-      return this.name
-    }
-  }
 })

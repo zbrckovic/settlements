@@ -1,12 +1,24 @@
 export class Road {
-  /** @see constructor */
-  static from (props) {
-    return new Road(props)
+  static from ({ playerToken }) {
+    return new Road({ playerToken })
   }
 
-  static fromPlain ({}) {
-    return this.from({})
+  #playerToken
+
+  /** @private */
+  constructor ({ playerToken }) {
+    this.#playerToken = playerToken
   }
 
-  constructor ({}) {}
+  playerToken () {
+    return this.#playerToken
+  }
+
+  plain () {
+    return this.playerToken()
+  }
+
+  equals (other) {
+    return this.playerToken() === other.playerToken()
+  }
 }
