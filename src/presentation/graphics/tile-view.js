@@ -99,7 +99,7 @@ export class TileView {
     spriteContainer.addChild(sprite)
     spriteContainer.skew.set(Math.PI / 2 - this.#geometry.plane().angleBetweenAxes(), 0)
     spriteContainer.rotation = this.#geometry.plane().tiltAngle()
-    return sprite
+    return spriteContainer
   }
 }
 

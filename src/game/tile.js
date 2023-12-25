@@ -76,6 +76,10 @@ export class Tile {
     })
   }
 
+  withTranslation(coords) {
+    return this.withCoords(this.coords().withAddition(coords))
+  }
+
   withRotation () {
     return Tile.from({
       type: this.type(),

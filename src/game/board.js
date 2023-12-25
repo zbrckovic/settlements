@@ -1,6 +1,14 @@
 import { Coords } from './misc'
-import { EdgeKey, oppositeEdgeKeys, oppositeVertexKeys, Tile } from './tile'
+import {
+  calculateCanonicalVertexCoordsAndKey,
+  EdgeKey,
+  oppositeEdgeKeys,
+  oppositeVertexKeys,
+  Tile
+} from './tile'
 import { equals } from '../utils'
+import { Settlements } from './settlements'
+import { Roads } from './roads'
 
 export class Board {
   static INCONSISTENT_ROADS_ERROR = 'INCONSISTENT_CODE_ERROR'
@@ -16,6 +24,8 @@ export class Board {
   }
 
   #tilesById
+  #settlements = Settlements.from()
+  #roads = Roads.from()
 
   /**
    * @private
@@ -36,8 +46,10 @@ export class Board {
     })
   }
 
-  #validateTiles() {
+  #validateTiles () {
     const edgeKeys = Object.values(EdgeKey)
+
+    const settlements = {}
 
     this.tiles().forEach(tile => {
       const coords = tile.coords()
@@ -46,7 +58,7 @@ export class Board {
         const neighbourTile = this.getNeighbourTile(coords, edgeKey)
         if (neighbourTile === undefined) return
 
-        // check roads
+        // process roads
         const oppositeEdgeKey = oppositeEdgeKeys[edgeKey]
         const tileRoad = tile.getRoad(edgeKey)
         const neighbourTileRoad = neighbourTile.getRoad(oppositeEdgeKey)
@@ -54,13 +66,20 @@ export class Board {
           throw new Error(Board.INCONSISTENT_ROADS_ERROR)
         }
 
-        // check settlements
+        // process settlements
         const vertexKeys = oppositeVertexKeys[edgeKey]
         Object.entries(vertexKeys).forEach(([vertexKey, neighbourVertexKey]) => {
           const settlement = tile.getSettlement(vertexKey)
           const neighbourSettlement = neighbourTile.getSettlement(neighbourVertexKey)
           if (!equals(settlement, neighbourSettlement)) {
             throw new Error(Board.INCONSISTENT_SETTLEMENTS_ERROR)
+          }
+
+          if (settlement !== undefined) {
+            this.#settlements.set(
+              ...calculateCanonicalVertexCoordsAndKey(coords, vertexKey),
+              settlement
+            )
           }
         })
       })
@@ -174,11 +193,6 @@ export class Board {
    * Translates all tiles by given values.
    */
   static #translateTiles (tiles, x = 0, y = 0) {
-    return tiles.map(tile => {
-      return tile.withCoords(Coords.from({
-        x: tile.coords().x() + x,
-        y: tile.coords().y() + y
-      }))
-    })
+    return tiles.map(tile => tile.withTranslation(Coords.from({ x, y })))
   }
 }

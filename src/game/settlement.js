@@ -44,3 +44,4 @@ export const SettlementType = {
   VILLAGE: 'VILLAGE',
   CITY: 'CITY'
 }
+
