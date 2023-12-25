@@ -7,6 +7,10 @@ export class Settlement {
     return new Settlement({ type: SettlementType.CITY, playerToken })
   }
 
+  static from({ type, playerToken }) {
+    return new Settlement({ type, playerToken })
+  }
+
   #type
   #playerToken
 

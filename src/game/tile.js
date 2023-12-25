@@ -28,14 +28,14 @@ export class Tile {
     const settlements = {}
     Object.values(VertexKey).forEach(key => {
       settlements[key] = settlementsPlain[key]
-        ? Settlement.fromPlain(settlementsPlain[key])
+        ? Settlement.from(settlementsPlain[key])
         : undefined
     })
 
     const roads = {}
     Object.values(EdgeKey).forEach(key => {
       roads[key] = roadsPlain[key]
-        ? Road.fromPlain(roadsPlain[key])
+        ? Road.from(roadsPlain[key])
         : undefined
     })
 
@@ -202,5 +202,30 @@ export const oppositeVertexKeys = {
   [EdgeKey.XY]: {
     [VertexKey.Y]: VertexKey.mXmY,
     [VertexKey.XY]: VertexKey.mY
+  }
+}
+
+/**
+ * Calculates coordinates of a tile which canonically owns the vertex, and a vertex key which
+ * designates this same vertex from the tile's perspective.
+ *
+ * Each vertex is possibly shared by up to 3 tiles. We want a consistent way to refer to each
+ * vertex on the board, so we always use the tile with the highest coordinates (even in the case of
+ * edge vertices when the canonical owner tiles are not actually present on the board).
+ */
+export function calculateCanonicalVertexCoordsAndKey (coords, vertexKey) {
+  switch (vertexKey) {
+    case VertexKey.mY:
+      return [coords, vertexKey]
+    case VertexKey.mXmY:
+      return [coords, vertexKey]
+    case VertexKey.mXY:
+      return [coords.withAddition(Coords.from({ x: 0, y: 1 })), VertexKey.mY]
+    case VertexKey.Y:
+      return [coords.withAddition(Coords.from({ x: 1, y: 1 })), VertexKey.mXmY]
+    case VertexKey.XY:
+      return [coords.withAddition(Coords.from({ x: 1, y: 1 })), VertexKey.mY]
+    case VertexKey.XmY:
+      return [coords.withAddition(Coords.from({ x: 1, y: 0 })), VertexKey.mXmY]
   }
 }

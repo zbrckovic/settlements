@@ -1,9 +1,8 @@
 import { TileType } from '../../game/tile'
-import { Container, Graphics, Sprite, Text } from 'pixi.js'
+import { Container, Graphics, Sprite } from 'pixi.js'
 import { addPointsToGraphics } from '../../pixi-utils'
 import { Point } from './geometry'
 import { TileGeometry } from './tile-geometry'
-import { VertexDirection } from '../../game/misc'
 
 export class TileView {
   /** @see constructor */
@@ -30,20 +29,7 @@ export class TileView {
     this.#container = new Container()
 
     this.container().addChild(this.#createHexGraphics())
-    // this.container().addChild(this.#createVertexGraphics())
-
-    const sprite = new Sprite(this.#assets.hex)
-    sprite.rotation = TileGeometry.HEX_ROTATION
-
-    sprite.scale.set(0.15, 0.15)
-    sprite.anchor.set(0.5, 0.5)
-
-    const spriteContainer = new Container()
-    spriteContainer.addChild(sprite)
-    spriteContainer.skew.set(Math.PI / 2 - this.#geometry.plane().angleBetweenAxes(), 0)
-    spriteContainer.rotation = this.#geometry.plane().tiltAngle()
-
-    this.container().addChild(spriteContainer)
+    this.container().addChild(this.#createSprite())
   }
 
   /**
@@ -83,23 +69,6 @@ export class TileView {
     return addPointsToGraphics(graphics, this.#geometry.hexPoints())
   }
 
-  #createVertexGraphics () {
-    const container = new Container()
-
-    if (this.#tile.type() === TileType.Desert) {
-
-      Object.values(VertexDirection).forEach(direction => {
-        const p = this.#geometry.getHexPoint(direction)
-        const text = new Text(direction)
-        text.anchor.set(0.5, 0.5)
-        text.position.set(p.x(), p.y())
-        container.addChild(text)
-      })
-    }
-
-    return container
-  }
-
   #calculateTileColor () {
     if (this.#tile === undefined) return 0x000000
 
@@ -117,6 +86,20 @@ export class TileView {
       case TileType.Desert:
         return 0xffeac7
     }
+  }
+
+  #createSprite() {
+    const sprite = new Sprite(this.#assets.hex)
+    sprite.rotation = TileGeometry.HEX_ROTATION
+
+    sprite.scale.set(0.15, 0.15)
+    sprite.anchor.set(0.5, 0.5)
+
+    const spriteContainer = new Container()
+    spriteContainer.addChild(sprite)
+    spriteContainer.skew.set(Math.PI / 2 - this.#geometry.plane().angleBetweenAxes(), 0)
+    spriteContainer.rotation = this.#geometry.plane().tiltAngle()
+    return sprite
   }
 }
 
