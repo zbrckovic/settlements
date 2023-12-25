@@ -8,6 +8,7 @@ import {
 import { Coords } from '../../src/game/misc'
 import { Road } from '../../src/game/road'
 import { PlayerToken } from '../../src/game/player-token'
+import { equals } from '../../src/utils'
 
 describe('Tile', () => {
   test('withRotation()', () => {
@@ -33,7 +34,7 @@ describe('Tile', () => {
       }
     })
 
-    expect(rotatedTile.plain()).toEqual(expectedTile.plain())
+    expect(equals(rotatedTile, expectedTile)).toBe(true)
   })
 
   test.each([
@@ -70,7 +71,7 @@ describe('Tile', () => {
       actualVertexKey
     ] = calculateCanonicalVertexCoordsAndKey(coords1, vertexKey1)
 
-    expect(actualCoords.plain()).toEqual(expectedCoords.plain())
-    expect(actualVertexKey).toEqual(expectedVertexKey)
+    expect(equals(actualCoords, expectedCoords)).toBe(true)
+    expect(equals(actualVertexKey, expectedVertexKey)).toBe(true)
   })
 })

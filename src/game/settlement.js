@@ -1,3 +1,5 @@
+import { equals } from '../utils'
+
 export class Settlement {
   static village ({ playerToken }) {
     return new Settlement({ type: SettlementType.VILLAGE, playerToken })
@@ -24,19 +26,13 @@ export class Settlement {
     return this.#type
   }
 
-  playerToken () {
-    return this.#playerToken
-  }
-
-  plain () {
-    return {
-      type: this.type(),
-      playerToken: this.playerToken()
-    }
-  }
-
   equals(other) {
-    return this.type() === other.type() && this.playerToken() === other.playerToken()
+    if (other === undefined) return false;
+    return equals([this.#type, this.#playerToken], [other.#type, other.#playerToken]);
+  }
+
+  toString() {
+    return `Settlement(${this.#type}, ${this.#playerToken})`
   }
 }
 

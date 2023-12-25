@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 /**
  * Compares two lists of numbers.
  * @param list1 - List of numbers.
@@ -17,7 +19,12 @@ export function compareListsOfNumbers (list1, list2) {
   return 0
 }
 
-export function equals(equatable1, equatable2) {
-  if (equatable1 === undefined) return equatable2 === undefined
-  return equatable1.equals(equatable2)
+export function equals (a, b) {
+  return _.isEqualWith(a, b, (value1, value2) => {
+    if (_.isFunction(value1?.equals)) {
+      return value1.equals(value2)
+    } else {
+      return undefined
+    }
+  })
 }

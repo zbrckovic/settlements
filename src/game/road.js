@@ -1,3 +1,5 @@
+import { equals } from '../utils'
+
 export class Road {
   static from ({ playerToken }) {
     return new Road({ playerToken })
@@ -10,15 +12,12 @@ export class Road {
     this.#playerToken = playerToken
   }
 
-  playerToken () {
-    return this.#playerToken
-  }
-
-  plain () {
-    return this.playerToken()
-  }
-
   equals (other) {
-    return this.playerToken() === other.playerToken()
+    if (other === undefined) return false
+    return equals([this.#playerToken], [other.#playerToken])
+  }
+
+  toString () {
+    return `Road(${this.#playerToken})`
   }
 }

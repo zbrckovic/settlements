@@ -1,4 +1,4 @@
-import { compareListsOfNumbers } from '../utils'
+import { compareListsOfNumbers, equals } from '../utils'
 
 /**
  * Used to identify the position of a tile on the board.
@@ -30,10 +30,13 @@ export class Coords {
   y () { return this.#y }
 
   compare (other) {
-    return compareListsOfNumbers(this.plain(), other.plain())
+    return compareListsOfNumbers([this.#x, this.#y], [other.#x, other.#y])
   }
 
-  plain () { return [this.x(), this.y()] }
+  equals (other) {
+    if (other === undefined) return false
+    return equals([this.#x, this.#y], [other.#x, other.#y])
+  }
 
   withAddition (other) {
     return Coords.from({

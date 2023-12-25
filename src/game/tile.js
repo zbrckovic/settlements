@@ -1,6 +1,7 @@
 import { Coords } from './misc'
 import { Settlement } from './settlement'
 import { Road } from './road'
+import { equals } from '../utils'
 
 export const TileType = {
   Pasture: 'Pasture',
@@ -27,16 +28,16 @@ export class Tile {
 
     const settlements = {}
     Object.values(VertexKey).forEach(key => {
-      settlements[key] = settlementsPlain[key]
-        ? Settlement.from(settlementsPlain[key])
-        : undefined
+      if (settlementsPlain[key] !== undefined) {
+        settlements[key] = Settlement.from(settlementsPlain[key])
+      }
     })
 
     const roads = {}
     Object.values(EdgeKey).forEach(key => {
-      roads[key] = roadsPlain[key]
-        ? Road.from(roadsPlain[key])
-        : undefined
+      if (roadsPlain[key] !== undefined) {
+        roads[key] = Road.from(roadsPlain[key])
+      }
     })
 
     return this.from({ type, coords, settlements, roads })
@@ -59,6 +60,10 @@ export class Tile {
 
   coords () { return this.#coords }
 
+  settlements () { return this.#settlements }
+
+  roads () { return this.#roads }
+
   getRoad (edgeKey) {
     return this.#roads[edgeKey]
   }
@@ -76,7 +81,7 @@ export class Tile {
     })
   }
 
-  withTranslation(coords) {
+  withTranslation (coords) {
     return this.withCoords(this.coords().withAddition(coords))
   }
 
@@ -110,21 +115,16 @@ export class Tile {
     return this.coords().compare(other.coords())
   }
 
-  plain () {
-    return {
-      type: this.type(),
-      coords: this.coords().plain(),
-      settlements: Object.fromEntries(
-        Object
-          .entries(this.#settlements)
-          .map(([key, settlement]) => [key, settlement?.plain()])
-      ),
-      roads: Object.fromEntries(
-        Object
-          .entries(this.#roads)
-          .map(([key, road]) => [key, road?.plain()])
-      )
-    }
+  equals (other) {
+    if (other === undefined) return false
+    return equals(
+      [this.#type, this.#coords, this.#settlements, this.#roads],
+      [other.#type, other.#coords, other.#settlements, other.#roads]
+    )
+  }
+
+  toString () {
+    return `Tile(${this.#type}, ${this.#coords})`
   }
 
   id () {
@@ -137,7 +137,9 @@ export class Tile {
 
     const result = {}
     Object.values(keys).forEach((key, i) => {
-      result[shiftedKeys[i]] = settlements[key]
+      if (settlements[key] !== undefined) {
+        result[shiftedKeys[i]] = settlements[key]
+      }
     })
     return result
   }
@@ -145,10 +147,11 @@ export class Tile {
   static #repositionRoadsForRotation (roads) {
     const keys = Object.values(EdgeKey)
     const shiftedKeys = [...keys.slice(1), keys[0]]
-
     const result = {}
     Object.values(keys).forEach((key, i) => {
-      result[shiftedKeys[i]] = roads[key]
+      if (roads[key] !== undefined) {
+        result[shiftedKeys[i]] = roads[key]
+      }
     })
     return result
   }

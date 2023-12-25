@@ -134,15 +134,6 @@ export class Board {
     return result
   }
 
-  /**
-   * Plain object for equality comparison in tests.
-   */
-  plain () {
-    const result = Array.from(this.tiles())
-    result.sort((a, b) => a.compare(b))
-    return result.map(t => t.plain())
-  }
-
   static #repositionAndRotateTilesForRotation (tiles) {
     return tiles.map(tile => {
       const x = tile.coords().x()
@@ -187,6 +178,16 @@ export class Board {
     const height = maxY - minY + 1
 
     return { x: minX, y: minY, width, height }
+  }
+
+  equals(other) {
+    if (other === undefined) return undefined
+
+    return equals(
+      [this.#tilesById],
+      [other.#tilesById],
+    )
+
   }
 
   /**

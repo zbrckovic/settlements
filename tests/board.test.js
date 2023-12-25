@@ -4,6 +4,7 @@ import { Coords } from '../src/game/misc'
 import { PlayerToken } from '../src/game/player-token'
 import { Road } from '../src/game/road'
 import { Settlement } from '../src/game/settlement'
+import { equals } from '../src/utils'
 
 describe('Board', () => {
   let testBoard
@@ -38,7 +39,7 @@ describe('Board', () => {
     })
   })
 
-  test('rotate()', () => {
+  test('withRotation()', () => {
     const expectedBoard = Board.fromPlain({
       tiles: [
         { type: TileType.Forest, coords: { x: 0, y: 0 } },
@@ -65,11 +66,11 @@ describe('Board', () => {
         { type: TileType.Forest, coords: { x: 3, y: 4 } },
         { type: TileType.Hills, coords: { x: 4, y: 4 } },
       ]
-    }).plain()
+    })
 
-    const rotatedBoard = testBoard.withRotation().plain()
+    const rotatedBoard = testBoard.withRotation()
 
-    expect(rotatedBoard).toEqual(expectedBoard)
+    expect(equals(rotatedBoard, expectedBoard)).toBe(true)
   })
 
   test.each([
@@ -80,7 +81,7 @@ describe('Board', () => {
   ])('getNeighbourTile(%s, %s) returns tile at %s', (coords, edgeKey, expectedCoords) => {
     const actual = testBoard.getNeighbourTile(coords, edgeKey)
     const expected = testBoard.getTile(expectedCoords)
-    expect(actual?.plain()).toEqual(expected?.plain())
+    expect(equals(actual, expected)).toBe(true)
   })
 
   describe('constructor', () => {

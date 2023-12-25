@@ -1,3 +1,5 @@
+import { equals } from '../utils'
+
 /**
  * A nested map which contains the following mapping for each settlement:
  * `coords` -> `vertex key` -> `settlement`.
@@ -22,5 +24,10 @@ export class Settlements {
       this.#map[coordsId] = nestedMap
     }
     nestedMap[vertexKey] = settlement
+  }
+
+  equals (other) {
+    if (other === undefined) return false
+    return equals([this.#map], [other.#map])
   }
 }

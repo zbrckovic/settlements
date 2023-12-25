@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { equals } from '../utils'
 
 /**
  * A nested map which contains the following mapping for each road:
@@ -26,9 +26,8 @@ export class Roads {
     nestedMap[edgeKey] = road
   }
 
-  plain () {
-    return _.mapValues(this.#map, nestedMap => {
-      _.mapValues(nestedMap, road => road?.plain())
-    })
+  equals (other) {
+    if (other === undefined) return false
+    return equals([this.#map], [other.#map])
   }
 }
