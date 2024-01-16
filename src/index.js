@@ -50,58 +50,36 @@ const startApp = async () => {
     ]
   })
 
-  function generateBoard () {
-    //[pasture, forrest, fields, hills, mountains, desert]
-    const fields = [4, 4, 4, 3, 3, 1]
-    const tiles = []
+  function generateBoard() {
+    const tileCounts = [4, 4, 4, 3, 3, 1];
+    const tiles = [];
 
-    function generateTyle (j, i) {
-      let temp
-      do
-        temp = Math.floor(Math.random() * 5)
-      while (fields[temp] === 0 && fields.some(item => item !== 0))
-      tiles[tiles.length] = Tile.from({
-        type: resolveTyle(temp),
+    function generateTile(j, i) {
+      let temp;
+      do {
+        temp = Math.floor(Math.random() * 6);
+      } while (tileCounts[temp] === 0 && tileCounts.some(item => item !== 0));
+      tiles.push(Tile.from({
+        type: resolveTile(temp),
         coords: Coords.from({ x: j, y: i })
-      })
-      fields[temp] = fields[temp]--
+      }));
+      tileCounts[temp]--;
     }
 
     for (let i = 0; i <= 4; i++) {
-      if (i === 0 || i === 4) {
-        for (let j = 0; j <= 2; j++) {
-          generateTyle(j, i)
-        }
-      } else if (i === 1 || i === 3) {
-        for (let j = 0; j <= 3; j++) {
-          generateTyle(j, i)
-        }
-      } else {
-        for (let j = 0; j <= 4; j++) {
-          generateTyle(j, i)
-        }
+      const maxJ = (i === 0 || i === 4) ? 2 : (i === 1 || i === 3) ? 3 : 4;
+      for (let j = 0; j <= maxJ; j++) {
+        generateTile(j, i);
       }
     }
-    return tiles
+    return tiles;
   }
 
-  function resolveTyle (number) {
-    //[pasture, forrest, fields, hills, mountains, desert]
-    switch (number) {
-      case 0:
-        return TileType.Pasture
-      case 1:
-        return TileType.Forest
-      case 2:
-        return TileType.Fields
-      case 3:
-        return TileType.Hills
-      case 4:
-        return TileType.Mountains
-      case 5:
-        return TileType.Desert
-    }
+  function resolveTile(number) {
+    const tileTypes = [TileType.Pasture, TileType.Forest, TileType.Fields, TileType.Hills, TileType.Mountains, TileType.Desert];
+    return tileTypes[number];
   }
+
 
   const boardContainer = new Container()
   const boardView = BoardView.from({ plane, assets: boardScreenBundle, board })
